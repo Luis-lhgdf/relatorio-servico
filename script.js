@@ -48,7 +48,7 @@ function configurarAssinatura(canvas) {
         desenhando = false;
     };
 
-    // Eventos para mouse
+    // Eventos para mouse (desktop)
     canvas.addEventListener('mousedown', iniciarDesenho);
     canvas.addEventListener('mousemove', desenhar);
     canvas.addEventListener('mouseup', pararDesenho);
@@ -65,6 +65,7 @@ document.addEventListener("DOMContentLoaded", function () {
     configurarAssinatura(document.getElementById('assinaturaTecnico'));
     configurarAssinatura(document.getElementById('assinaturaCliente'));
 });
+
 
 function formatarData(data) {
     // Dividir a data em partes (ano, mês, dia)
