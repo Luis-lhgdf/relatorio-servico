@@ -1,5 +1,3 @@
-// script.js
-
 // Função para limpar a assinatura no canvas
 function limparAssinatura(tipo) {
     const canvas = document.getElementById(`assinatura${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
@@ -7,92 +5,65 @@ function limparAssinatura(tipo) {
     context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-// Função para desenhar a assinatura no canvas
-    const canvasTecnico = document.getElementById('assinaturaTecnico');
-    const contextTecnico = canvasTecnico.getContext('2d');
-    let drawingTecnico = false;
+// Função para capturar a posição correta dentro do canvas
+function getPosicao(evento, canvas) {
+    const rect = canvas.getBoundingClientRect(); // Posição do canvas na tela
+    let x, y;
 
-
-
-canvasTecnico.addEventListener('mousedown', (e) => {
-    drawingTecnico = true;
-    contextTecnico.beginPath();
-    contextTecnico.moveTo(e.offsetX, e.offsetY);
-});
-
-canvasTecnico.addEventListener('mousemove', (e) => {
-    if (drawingTecnico) {
-        contextTecnico.lineTo(e.offsetX, e.offsetY);
-        contextTecnico.stroke();
+    if (evento.touches) {
+        // Para dispositivos móveis (touch)
+        x = evento.touches[0].clientX - rect.left;
+        y = evento.touches[0].clientY - rect.top;
+    } else {
+        // Para desktop (mouse)
+        x = evento.offsetX;
+        y = evento.offsetY;
     }
-});
 
-canvasTecnico.addEventListener('mouseup', () => {
-    drawingTecnico = false;
-});
+    return { x, y };
+}
 
-canvasTecnico.addEventListener('mouseout', () => {
-    drawingTecnico = false;
-});
+// Função para configurar a assinatura em qualquer canvas
+function configurarAssinatura(canvas) {
+    const context = canvas.getContext('2d');
+    let desenhando = false;
 
-canvasTecnico.addEventListener('touchstart', (y) => {
-    drawingTecnico = true;
-    contextTecnico.beginPath();
-    contextTecnico.moveTo(y.offsetX, y.offsetY);
-});
+    const iniciarDesenho = (evento) => {
+        evento.preventDefault(); // Previne o comportamento padrão (ex: rolagem da tela no celular)
+        desenhando = true;
+        const { x, y } = getPosicao(evento, canvas);
+        context.beginPath();
+        context.moveTo(x, y);
+    };
 
-canvasTecnico.addEventListener('touchmove', (y) => {
-    if (drawingTecnico) {
-        contextTecnico.lineTo(y.offsetX, y.offsetY);
-        contextTecnico.stroke();
-    }
-});
+    const desenhar = (evento) => {
+        if (!desenhando) return;
+        evento.preventDefault();
+        const { x, y } = getPosicao(evento, canvas);
+        context.lineTo(x, y);
+        context.stroke();
+    };
 
-canvasTecnico.addEventListener('touchend', () => {
-    drawingTecnico = false;
-});
+    const pararDesenho = () => {
+        desenhando = false;
+    };
 
-// Função para desenhar a assinatura do cliente no canvas
-const canvasCliente = document.getElementById('assinaturaCliente');
-const contextCliente = canvasCliente.getContext('2d');
-let drawingCliente = false;
+    // Eventos para mouse
+    canvas.addEventListener('mousedown', iniciarDesenho);
+    canvas.addEventListener('mousemove', desenhar);
+    canvas.addEventListener('mouseup', pararDesenho);
+    canvas.addEventListener('mouseleave', pararDesenho);
 
-canvasCliente.addEventListener('mousedown', (e) => {
-    drawingCliente = true;
-    contextCliente.beginPath();
-    contextCliente.moveTo(e.offsetX, e.offsetY);
-});
+    // Eventos para toque (mobile)
+    canvas.addEventListener('touchstart', iniciarDesenho, { passive: false });
+    canvas.addEventListener('touchmove', desenhar, { passive: false });
+    canvas.addEventListener('touchend', pararDesenho);
+}
 
-canvasCliente.addEventListener('mousemove', (e) => {
-    if (drawingCliente) {
-        contextCliente.lineTo(e.offsetX, e.offsetY);
-        contextCliente.stroke();
-    }
-});
-
-canvasCliente.addEventListener('mouseup', () => {
-    drawingCliente = false;
-});
-
-canvasCliente.addEventListener('mouseout', () => {
-    drawingCliente = false;
-});
-
-canvasCliente.addEventListener('touchstart', (y) => {
-    drawingCliente = true;
-    contextCliente.beginPath();
-    contextCliente.moveTo(y.offsetX, e.offsetY);
-});
-
-canvasCliente.addEventListener('touchmove', (y) => {
-    if (drawingCliente) {
-        contextCliente.lineTo(y.offsetX, y.offsetY);
-        contextCliente.stroke();
-    }
-});
-
-canvasCliente.addEventListener('touchend', () => {
-    drawingCliente = false;
+// Aplicar a configuração nos canvases após o carregamento do DOM
+document.addEventListener("DOMContentLoaded", function () {
+    configurarAssinatura(document.getElementById('assinaturaTecnico'));
+    configurarAssinatura(document.getElementById('assinaturaCliente'));
 });
 
 function formatarData(data) {
