@@ -16,8 +16,8 @@ function getPosicao(evento, canvas) {
         y = evento.touches[0].clientY - rect.top;
     } else {
         // Para desktop (mouse)
-        x = evento.offsetX;
-        y = evento.offsetY;
+        x = evento.offsetX || evento.layerX;
+        y = evento.offsetY || evento.layerY;
     }
 
     return { x, y };
