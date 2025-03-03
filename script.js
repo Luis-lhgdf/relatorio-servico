@@ -59,22 +59,45 @@ canvasCliente.addEventListener('mouseout', () => {
     drawingCliente = false;
 });
 
-canvasTecnico.addEventListener('touchstart', (e) => {
-    drawingTecnico = true;
-    contextTecnico.beginPath();
-    contextTecnico.moveTo(e.offsetX, e.offsetY);
-});
+function startDrawing(event) {
+            isDrawing = true;
+            ctx.beginPath();
+            ctx.moveTo(getX(event), getY(event));
+        }
 
-canvasTecnico.addEventListener('touchmove', (e) => {
-    if (drawingTecnico) {
-        contextTecnico.lineTo(e.offsetX, e.offsetY);
-        contextTecnico.stroke();
-    }
-});
+        function draw(event) {
+            if (!isDrawing) return;
+            ctx.lineTo(getX(event), getY(event));
+            ctx.stroke();
+        }
 
-canvasTecnico.addEventListener('touchend', () => {
-    drawingTecnico = false;
-});
+        function stopDrawing() {
+            isDrawing = false;
+        }
+
+        // Função para capturar a posição correta (mouse ou toque)
+        function getX(event) {
+            return event.clientX || event.touches[0].clientX - canvas.offsetLeft;
+        }
+
+        function getY(event) {
+            return event.clientY || event.touches[0].clientY - canvas.offsetTop;
+        }
+
+        function clearCanvas() {
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+
+        // Eventos de mouse
+        canvas.addEventListener("mousedown", startDrawing);
+        canvas.addEventListener("mousemove", draw);
+        canvas.addEventListener("mouseup", stopDrawing);
+        canvas.addEventListener("mouseleave", stopDrawing);
+
+        // Eventos de toque para celular
+        canvas.addEventListener("touchstart", startDrawing);
+        canvas.addEventListener("touchmove", draw);
+        canvas.addEventListener("touchend", stopDrawing);
 
 
 function formatarData(data) {
