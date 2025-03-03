@@ -72,14 +72,11 @@ document.addEventListener("DOMContentLoaded", function () {
     configurarAssinatura(canvasCliente);
 });
 
+// Função para formatar a data para o formato dd/mm/aaaa
 function formatarData(data) {
-    // Dividir a data em partes (ano, mês, dia)
     const partes = data.split('-');
-    
-    // Reorganizar para o formato dd/mm/aaaa
     return `${partes[2]}/${partes[1]}/${partes[0]}`;
 }
-
 
 // Função para gerar o PDF
 function gerarPDF() {
@@ -87,7 +84,6 @@ function gerarPDF() {
     const doc = new jsPDF();
 
     // Adicionar o logo no PDF
-    // Adicionando uma imagem (em base64 ou caminho da imagem)
     const logo = 'assets/icons/Logo.jpg'; // Substitua pela sua imagem base64 ou caminho do arquivo
     doc.addImage(logo, 'PNG', 150, 10, 50, 30); // Parâmetros: imagem, tipo, x, y, largura, altura
     
@@ -102,9 +98,9 @@ function gerarPDF() {
     const dataFormatada = formatarData(dataServico);    
 
     // Adiciona os dados da ordem de serviço
-    doc.setFont('helvetica', 'normal');  // Definindo a fonte
-    doc.setFontSize(15); // Definindo o tamanho da fonte
-    doc.setTextColor(0, 0, 0);  // Definindo a cor do texto (preto)
+    doc.setFont('helvetica', 'normal');
+    doc.setFontSize(15);
+    doc.setTextColor(0, 0, 0);
     doc.text(`Ordem de Serviço`, 70, 20);
     doc.text(`Data do Serviço: ${dataFormatada}`, 20, 40);
     doc.text(`Nome do Técnico: ${tecnico}`, 20, 50);
@@ -115,12 +111,12 @@ function gerarPDF() {
     doc.text(`Valor: R$ ${valor}`, 20, 110);
     
     // Adiciona a assinatura do técnico
-    const canvasTecnicoData = canvasTecnico.toDataURL('image/png');
+    const canvasTecnicoData = document.getElementById('assinaturaTecnico').toDataURL('image/png');
     doc.addImage(canvasTecnicoData, 'PNG', 20, 120, 100, 50);
     doc.text(`Assinatura do Técnico`, 20, 170);
 
     // Adiciona a assinatura do cliente
-    const canvasClienteData = canvasCliente.toDataURL('image/png');
+    const canvasClienteData = document.getElementById('assinaturaCliente').toDataURL('image/png');
     doc.addImage(canvasClienteData, 'PNG', 20, 180, 100, 50);
     doc.text(`Assinatura do Cliente`, 20, 230);
 
