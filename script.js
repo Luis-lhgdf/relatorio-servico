@@ -59,46 +59,6 @@ canvasCliente.addEventListener('mouseout', () => {
     drawingCliente = false;
 });
 
-function startDrawing(event) {
-            isDrawing = true;
-            ctx.beginPath();
-            ctx.moveTo(getX(event), getY(event));
-        }
-
-        function draw(event) {
-            if (!isDrawing) return;
-            ctx.lineTo(getX(event), getY(event));
-            ctx.stroke();
-        }
-
-        function stopDrawing() {
-            isDrawing = false;
-        }
-
-        // Função para capturar a posição correta (mouse ou toque)
-        function getX(event) {
-            return event.clientX || event.touches[0].clientX - canvas.offsetLeft;
-        }
-
-        function getY(event) {
-            return event.clientY || event.touches[0].clientY - canvas.offsetTop;
-        }
-
-        function clearCanvas() {
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-        }
-
-        // Eventos de mouse
-        canvas.addEventListener("mousedown", startDrawing);
-        canvas.addEventListener("mousemove", draw);
-        canvas.addEventListener("mouseup", stopDrawing);
-        canvas.addEventListener("mouseleave", stopDrawing);
-
-        // Eventos de toque para celular
-        canvas.addEventListener("touchstart", startDrawing);
-        canvas.addEventListener("touchmove", draw);
-        canvas.addEventListener("touchend", stopDrawing);
-
 
 function formatarData(data) {
     // Dividir a data em partes (ano, mês, dia)
