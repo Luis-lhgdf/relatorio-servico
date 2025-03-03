@@ -63,7 +63,6 @@ function configurarAssinatura(canvas) {
 
 // Aplicar a configuração nos canvases após o carregamento do DOM
 document.addEventListener("DOMContentLoaded", function () {
-    // Ajuste de event listeners para garantir que o canvas funcione corretamente em dispositivos móveis
     const canvasTecnico = document.getElementById('assinaturaTecnico');
     const canvasCliente = document.getElementById('assinaturaCliente');
     
@@ -129,4 +128,3 @@ document.getElementById('osForm').addEventListener('submit', (e) => {
     e.preventDefault();
     gerarPDF();
 });
-
