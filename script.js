@@ -7,57 +7,62 @@ function limparAssinatura(tipo) {
     context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-// Função para desenhar a assinatura no canvas
-const canvasTecnico = document.getElementById('assinaturaTecnico');
-const contextTecnico = canvasTecnico.getContext('2d');
-let drawingTecnico = false;
+// Função auxiliar para obter coordenadas corretas no canvas
+function getTouchPos(canvas, touchEvent) {
+    const rect = canvas.getBoundingClientRect();
+    return {
+        x: touchEvent.touches[0].clientX - rect.left,
+        y: touchEvent.touches[0].clientY - rect.top
+    };
+}
 
-canvasTecnico.addEventListener('mousedown', (e) => {
-    drawingTecnico = true;
-    contextTecnico.beginPath();
-    contextTecnico.moveTo(e.offsetX, e.offsetY);
-});
+// Função genérica para adicionar eventos de desenho ao canvas
+function configurarCanvas(canvas) {
+    const context = canvas.getContext('2d');
+    let drawing = false;
 
-canvasTecnico.addEventListener('mousemove', (e) => {
-    if (drawingTecnico) {
-        contextTecnico.lineTo(e.offsetX, e.offsetY);
-        contextTecnico.stroke();
-    }
-});
+    // Eventos de mouse
+    canvas.addEventListener('mousedown', (e) => {
+        drawing = true;
+        context.beginPath();
+        context.moveTo(e.offsetX, e.offsetY);
+    });
 
-canvasTecnico.addEventListener('mouseup', () => {
-    drawingTecnico = false;
-});
+    canvas.addEventListener('mousemove', (e) => {
+        if (drawing) {
+            context.lineTo(e.offsetX, e.offsetY);
+            context.stroke();
+        }
+    });
 
-canvasTecnico.addEventListener('mouseout', () => {
-    drawingTecnico = false;
-});
+    canvas.addEventListener('mouseup', () => { drawing = false; });
+    canvas.addEventListener('mouseout', () => { drawing = false; });
 
-// Função para desenhar a assinatura do cliente no canvas
-const canvasCliente = document.getElementById('assinaturaCliente');
-const contextCliente = canvasCliente.getContext('2d');
-let drawingCliente = false;
+    // Eventos de toque (suporte para celular)
+    canvas.addEventListener('touchstart', (e) => {
+        e.preventDefault(); // Evita rolagem da tela ao tocar
+        drawing = true;
+        const pos = getTouchPos(canvas, e);
+        context.beginPath();
+        context.moveTo(pos.x, pos.y);
+    });
 
-canvasCliente.addEventListener('mousedown', (e) => {
-    drawingCliente = true;
-    contextCliente.beginPath();
-    contextCliente.moveTo(e.offsetX, e.offsetY);
-});
+    canvas.addEventListener('touchmove', (e) => {
+        e.preventDefault();
+        if (drawing) {
+            const pos = getTouchPos(canvas, e);
+            context.lineTo(pos.x, pos.y);
+            context.stroke();
+        }
+    });
 
-canvasCliente.addEventListener('mousemove', (e) => {
-    if (drawingCliente) {
-        contextCliente.lineTo(e.offsetX, e.offsetY);
-        contextCliente.stroke();
-    }
-});
+    canvas.addEventListener('touchend', () => { drawing = false; });
+}
 
-canvasCliente.addEventListener('mouseup', () => {
-    drawingCliente = false;
-});
+// Configurar os canvases para técnico e cliente
+configurarCanvas(document.getElementById('assinaturaTecnico'));
+configurarCanvas(document.getElementById('assinaturaCliente'));
 
-canvasCliente.addEventListener('mouseout', () => {
-    drawingCliente = false;
-});
 
 
 function formatarData(data) {
