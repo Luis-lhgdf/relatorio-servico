@@ -59,6 +59,23 @@ canvasCliente.addEventListener('mouseout', () => {
     drawingCliente = false;
 });
 
+canvasTecnico.addEventListener('touchstart', (e) => {
+    drawingTecnico = true;
+    contextTecnico.beginPath();
+    contextTecnico.moveTo(e.offsetX, e.offsetY);
+});
+
+canvasTecnico.addEventListener('touchmove', (e) => {
+    if (drawingTecnico) {
+        contextTecnico.lineTo(e.offsetX, e.offsetY);
+        contextTecnico.stroke();
+    }
+});
+
+canvasTecnico.addEventListener('touchend', () => {
+    drawingTecnico = false;
+});
+
 
 function formatarData(data) {
     // Dividir a data em partes (ano, mês, dia)
