@@ -5,7 +5,7 @@ function limparAssinatura(tipo) {
     context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-// Função para capturar a posição correta dentro do canvas
+// Função para capturar as coordenadas corretas do toque ou mouse
 function getPosicao(evento, canvas) {
     const rect = canvas.getBoundingClientRect(); // Posição do canvas na tela
     let x, y;
@@ -23,7 +23,7 @@ function getPosicao(evento, canvas) {
     return { x, y };
 }
 
-// Função para configurar a assinatura em qualquer canvas
+// Função para configurar o canvas
 function configurarAssinatura(canvas) {
     const context = canvas.getContext('2d');
     let desenhando = false;
@@ -128,4 +128,5 @@ document.getElementById('osForm').addEventListener('submit', (e) => {
     e.preventDefault();
     gerarPDF();
 });
+
 
