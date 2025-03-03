@@ -62,10 +62,14 @@ function configurarAssinatura(canvas) {
 
 // Aplicar a configuração nos canvases após o carregamento do DOM
 document.addEventListener("DOMContentLoaded", function () {
-    configurarAssinatura(document.getElementById('assinaturaTecnico'));
-    configurarAssinatura(document.getElementById('assinaturaCliente'));
+    // Ajuste de event listeners para garantir que o canvas funcione corretamente em dispositivos móveis
+    const canvasTecnico = document.getElementById('assinaturaTecnico');
+    const canvasCliente = document.getElementById('assinaturaCliente');
+    
+    // Ajustando canvas para celular e desktop
+    configurarAssinatura(canvasTecnico);
+    configurarAssinatura(canvasCliente);
 });
-
 
 function formatarData(data) {
     // Dividir a data em partes (ano, mês, dia)
