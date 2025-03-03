@@ -35,15 +35,15 @@ canvasTecnico.addEventListener('mouseout', () => {
     drawingTecnico = false;
 });
 
-canvasTecnico.addEventListener('touchstart', (e) => {
+canvasTecnico.addEventListener('touchstart', (y) => {
     drawingTecnico = true;
     contextTecnico.beginPath();
-    contextTecnico.moveTo(e.offsetX, e.offsetY);
+    contextTecnico.moveTo(y.offsetX, y.offsetY);
 });
 
-canvasTecnico.addEventListener('touchmove', (e) => {
+canvasTecnico.addEventListener('touchmove', (y) => {
     if (drawingTecnico) {
-        contextTecnico.lineTo(e.offsetX, e.offsetY);
+        contextTecnico.lineTo(y.offsetX, y.offsetY);
         contextTecnico.stroke();
     }
 });
@@ -78,15 +78,15 @@ canvasCliente.addEventListener('mouseout', () => {
     drawingCliente = false;
 });
 
-canvasCliente.addEventListener('touchstart', (e) => {
+canvasCliente.addEventListener('touchstart', (y) => {
     drawingCliente = true;
     contextCliente.beginPath();
-    contextCliente.moveTo(e.offsetX, e.offsetY);
+    contextCliente.moveTo(y.offsetX, e.offsetY);
 });
 
-canvasCliente.addEventListener('touchmove', (e) => {
+canvasCliente.addEventListener('touchmove', (y) => {
     if (drawingCliente) {
-        contextCliente.lineTo(e.offsetX, e.offsetY);
+        contextCliente.lineTo(y.offsetX, y.offsetY);
         contextCliente.stroke();
     }
 });
