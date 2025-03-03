@@ -7,61 +7,64 @@ function limparAssinatura(tipo) {
     context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-// Função auxiliar para obter coordenadas corretas no canvas
-function getTouchPos(canvas, touchEvent) {
-    const rect = canvas.getBoundingClientRect();
-    return {
-        x: touchEvent.touches[0].clientX - rect.left,
-        y: touchEvent.touches[0].clientY - rect.top
-    };
+// Função para capturar posição correta no canvas para mouse ou toque
+function getPosicao(evento, canvas) {
+    const rect = canvas.getBoundingClientRect(); // Posição do canvas na tela
+    let x, y;
+
+    if (evento.touches) {
+        x = evento.touches[0].clientX - rect.left;
+        y = evento.touches[0].clientY - rect.top;
+    } else {
+        x = evento.offsetX;
+        y = evento.offsetY;
+    }
+
+    return { x, y };
 }
 
-// Função genérica para adicionar eventos de desenho ao canvas
-function configurarCanvas(canvas) {
+// Função para configurar eventos de assinatura no canvas
+function configurarAssinatura(canvas) {
     const context = canvas.getContext('2d');
-    let drawing = false;
+    let desenhando = false;
 
-    // Eventos de mouse
-    canvas.addEventListener('mousedown', (e) => {
-        drawing = true;
+    const iniciarDesenho = (evento) => {
+        evento.preventDefault();
+        desenhando = true;
+        const { x, y } = getPosicao(evento, canvas);
         context.beginPath();
-        context.moveTo(e.offsetX, e.offsetY);
-    });
+        context.moveTo(x, y);
+    };
 
-    canvas.addEventListener('mousemove', (e) => {
-        if (drawing) {
-            context.lineTo(e.offsetX, e.offsetY);
-            context.stroke();
-        }
-    });
+    const desenhar = (evento) => {
+        if (!desenhando) return;
+        evento.preventDefault();
+        const { x, y } = getPosicao(evento, canvas);
+        context.lineTo(x, y);
+        context.stroke();
+    };
 
-    canvas.addEventListener('mouseup', () => { drawing = false; });
-    canvas.addEventListener('mouseout', () => { drawing = false; });
+    const pararDesenho = () => {
+        desenhando = false;
+    };
 
-    // Eventos de toque (suporte para celular)
-    canvas.addEventListener('touchstart', (e) => {
-        e.preventDefault(); // Evita rolagem da tela ao tocar
-        drawing = true;
-        const pos = getTouchPos(canvas, e);
-        context.beginPath();
-        context.moveTo(pos.x, pos.y);
-    });
+    // Eventos para mouse
+    canvas.addEventListener('mousedown', iniciarDesenho);
+    canvas.addEventListener('mousemove', desenhar);
+    canvas.addEventListener('mouseup', pararDesenho);
+    canvas.addEventListener('mouseleave', pararDesenho);
 
-    canvas.addEventListener('touchmove', (e) => {
-        e.preventDefault();
-        if (drawing) {
-            const pos = getTouchPos(canvas, e);
-            context.lineTo(pos.x, pos.y);
-            context.stroke();
-        }
-    });
-
-    canvas.addEventListener('touchend', () => { drawing = false; });
+    // Eventos para toque (mobile)
+    canvas.addEventListener('touchstart', iniciarDesenho, { passive: false });
+    canvas.addEventListener('touchmove', desenhar, { passive: false });
+    canvas.addEventListener('touchend', pararDesenho);
 }
 
-// Configurar os canvases para técnico e cliente
-configurarCanvas(document.getElementById('assinaturaTecnico'));
-configurarCanvas(document.getElementById('assinaturaCliente'));
+// Aplicar a configuração nos canvases
+document.addEventListener("DOMContentLoaded", function () {
+    configurarAssinatura(document.getElementById('assinaturaTecnico'));
+    configurarAssinatura(document.getElementById('assinaturaCliente'));
+});
 
 
 
