@@ -7,66 +7,93 @@ function limparAssinatura(tipo) {
     context.clearRect(0, 0, canvas.width, canvas.height);
 }
 
-// Função para capturar posição correta no canvas para mouse ou toque
-function getPosicao(evento, canvas) {
-    const rect = canvas.getBoundingClientRect(); // Posição do canvas na tela
-    let x, y;
+// Função para desenhar a assinatura no canvas
+    const canvasTecnico = document.getElementById('assinaturaTecnico');
+    const contextTecnico = canvasTecnico.getContext('2d');
+    let drawingTecnico = false;
 
-    if (evento.touches) {
-        x = evento.touches[0].clientX - rect.left;
-        y = evento.touches[0].clientY - rect.top;
-    } else {
-        x = evento.offsetX;
-        y = evento.offsetY;
-    }
 
-    return { x, y };
-}
 
-// Função para configurar eventos de assinatura no canvas
-function configurarAssinatura(canvas) {
-    const context = canvas.getContext('2d');
-    let desenhando = false;
-
-    const iniciarDesenho = (evento) => {
-        evento.preventDefault();
-        desenhando = true;
-        const { x, y } = getPosicao(evento, canvas);
-        context.beginPath();
-        context.moveTo(x, y);
-    };
-
-    const desenhar = (evento) => {
-        if (!desenhando) return;
-        evento.preventDefault();
-        const { x, y } = getPosicao(evento, canvas);
-        context.lineTo(x, y);
-        context.stroke();
-    };
-
-    const pararDesenho = () => {
-        desenhando = false;
-    };
-
-    // Eventos para mouse
-    canvas.addEventListener('mousedown', iniciarDesenho);
-    canvas.addEventListener('mousemove', desenhar);
-    canvas.addEventListener('mouseup', pararDesenho);
-    canvas.addEventListener('mouseleave', pararDesenho);
-
-    // Eventos para toque (mobile)
-    canvas.addEventListener('touchstart', iniciarDesenho, { passive: false });
-    canvas.addEventListener('touchmove', desenhar, { passive: false });
-    canvas.addEventListener('touchend', pararDesenho);
-}
-
-// Aplicar a configuração nos canvases
-document.addEventListener("DOMContentLoaded", function () {
-    configurarAssinatura(document.getElementById('assinaturaTecnico'));
-    configurarAssinatura(document.getElementById('assinaturaCliente'));
+canvasTecnico.addEventListener('mousedown', (e) => {
+    drawingTecnico = true;
+    contextTecnico.beginPath();
+    contextTecnico.moveTo(e.offsetX, e.offsetY);
 });
 
+canvasTecnico.addEventListener('mousemove', (e) => {
+    if (drawingTecnico) {
+        contextTecnico.lineTo(e.offsetX, e.offsetY);
+        contextTecnico.stroke();
+    }
+});
 
+canvasTecnico.addEventListener('mouseup', () => {
+    drawingTecnico = false;
+});
+
+canvasTecnico.addEventListener('mouseout', () => {
+    drawingTecnico = false;
+});
+
+canvasTecnico.addEventListener('touchstart', (e) => {
+    drawingTecnico = true;
+    contextTecnico.beginPath();
+    contextTecnico.moveTo(e.offsetX, e.offsetY);
+});
+
+canvasTecnico.addEventListener('touchmove', (e) => {
+    if (drawingTecnico) {
+        contextTecnico.lineTo(e.offsetX, e.offsetY);
+        contextTecnico.stroke();
+    }
+});
+
+canvasTecnico.addEventListener('touchend', () => {
+    drawingTecnico = false;
+});
+
+// Função para desenhar a assinatura do cliente no canvas
+const canvasCliente = document.getElementById('assinaturaCliente');
+const contextCliente = canvasCliente.getContext('2d');
+let drawingCliente = false;
+
+canvasCliente.addEventListener('mousedown', (e) => {
+    drawingCliente = true;
+    contextCliente.beginPath();
+    contextCliente.moveTo(e.offsetX, e.offsetY);
+});
+
+canvasCliente.addEventListener('mousemove', (e) => {
+    if (drawingCliente) {
+        contextCliente.lineTo(e.offsetX, e.offsetY);
+        contextCliente.stroke();
+    }
+});
+
+canvasCliente.addEventListener('mouseup', () => {
+    drawingCliente = false;
+});
+
+canvasCliente.addEventListener('mouseout', () => {
+    drawingCliente = false;
+});
+
+canvasCliente.addEventListener('touchstart', (e) => {
+    drawingCliente = true;
+    contextCliente.beginPath();
+    contextCliente.moveTo(e.offsetX, e.offsetY);
+});
+
+canvasCliente.addEventListener('touchmove', (e) => {
+    if (drawingCliente) {
+        contextCliente.lineTo(e.offsetX, e.offsetY);
+        contextCliente.stroke();
+    }
+});
+
+canvasCliente.addEventListener('touchend', () => {
+    drawingCliente = false;
+});
 
 function formatarData(data) {
     // Dividir a data em partes (ano, mês, dia)
@@ -129,3 +156,4 @@ document.getElementById('osForm').addEventListener('submit', (e) => {
     e.preventDefault();
     gerarPDF();
 });
+
