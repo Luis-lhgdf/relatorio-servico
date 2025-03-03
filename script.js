@@ -58,6 +58,7 @@ function configurarAssinatura(canvas) {
     canvas.addEventListener('touchstart', iniciarDesenho, { passive: false });
     canvas.addEventListener('touchmove', desenhar, { passive: false });
     canvas.addEventListener('touchend', pararDesenho);
+    canvas.addEventListener('touchcancel', pararDesenho); // Caso o toque seja cancelado
 }
 
 // Aplicar a configuração nos canvases após o carregamento do DOM
