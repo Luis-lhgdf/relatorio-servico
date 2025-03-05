@@ -73,7 +73,6 @@ button {
     cursor: pointer;
     border-radius: 5px;
     font-size: 17px;
-    width: 50%;  /* Botões com largura total para alinhamento */
     display: block;
     margin-top: 10px;
 }
