@@ -32,21 +32,21 @@ label {
     padding: 8px;                 
     font-size: 18px;               
     color: #333;                  
-    width: 20%;
+    width: 40%;
 }
 
 #tecnico {
     padding: 8px;                 
     font-size: 18px;               
     color: #333;                  
-    width: 30%;
+    width: 60%;
 } 
 
 #cnpj {
     padding: 8px;                 
     font-size: 18px;               
     color: #333;                  
-    width: 30%;
+    width: 60%;
     display: block;
 }
 
@@ -54,7 +54,7 @@ label {
     padding: 8px;                 
     font-size: 18px;               
     color: #333;                  
-    width: 60%;
+    width: 80%;
     display: block;
 }
 
@@ -63,7 +63,7 @@ label {
     padding: 8px;                 
     font-size: 18px;               
     color: #333;                  
-    width: 60%;
+    width: 100%;
     display: block;
 }
 
@@ -71,7 +71,7 @@ label {
     padding: 8px;                 
     font-size: 18px;               
     color: #333;                  
-    width: 15%;
+    width: 30%;
 }
 
 input, textarea {
