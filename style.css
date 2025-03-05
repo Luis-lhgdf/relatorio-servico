@@ -56,21 +56,28 @@ label {
 
 input, textarea {
     width: 99%;
-    padding: 8px;
-    margin-bottom: 15px;
-    border-radius: 5px;
+    padding: 10px;
+    font-size: 18px;
+    color: #333;
     border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    display: block;
 }
 
 button {
     background-color: #3518a9;
     color: white;
-    padding: 10px 20px;
+    padding: 12px 20px;
     border: none;
     cursor: pointer;
     border-radius: 5px;
     font-size: 17px;
+    width: 100%;  /* Botões com largura total para alinhamento */
+    display: block;
+    margin-top: 10px;
 }
+
 
 button:hover {
     background-color: #45a049;
@@ -88,7 +95,25 @@ canvas {
 /* Responsividade para telas menores */
 @media (max-width: 600px) {
     .container {
-        width: 100%;
+        width: 95%;
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 30px;
+    }
+    
+    label {
+        font-size: 18px;
+    }
+
+    input, textarea {
+        font-size: 16px;
+        padding: 8px;
+    }
+
+    button {
+        font-size: 16px;
         padding: 10px;
     }
 
