@@ -74,6 +74,7 @@ button:hover {
 
 canvas {
     margin-bottom: 10px;
-    
+    width: 80%;
+    max-width: 1200px;
 }
 
