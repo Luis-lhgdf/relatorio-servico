@@ -105,9 +105,17 @@ function gerarPDF() {
     doc.text(`Nome do Técnico: ${tecnico}`, 20, 50);
     doc.text(`CNPJ: ${cnpj}`, 20, 60);
     doc.text(`Razão Social: ${razaoSocial}`, 20, 70);
+    //doc.text(`Descrição do Serviço:`, 20, 80);
+    //doc.text(descricaoServico, 20, 80);
     doc.text(`Descrição do Serviço:`, 20, 80);
-    doc.text(descricaoServico, 20, 80);
-    doc.text(`Valor: R$ ${valor}`, 20, 110);
+    let textoFormatado = doc.splitTextToSize(descricaoServico, 170); // Ajusta a largura do texto
+    doc.text(textoFormatado, 20, 90); 
+    // Ajusta a posição para os próximos elementos no PDF
+    let alturaDescricao = textoFormatado.length * 7; // Calcula a altura do texto
+    let yPos = 90 + alturaDescricao; // Define a posição abaixo da descrição
+    doc.text(`Valor: R$ ${valor}`, 20, yPos);
+    yPos += 15; // Ajusta para a assinatura
+
     
     // Adiciona a assinatura do técnico
     const canvasTecnicoData = document.getElementById('assinaturaTecnico').toDataURL('image/png');
