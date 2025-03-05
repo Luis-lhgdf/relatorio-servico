@@ -127,9 +127,9 @@ canvas {
 }
 
 /* Responsividade para telas menores */
-@media (max-width: 600px) {
+@media (max-width: 800px) {
     .container {
-        width: 95%;
+        width: 120%;
         padding: 15px;
     }
 
@@ -142,8 +142,8 @@ canvas {
     }
 
     input, textarea {
-        font-size: 16px;
-        padding: 8px;
+        font-size: 18px;
+        padding: 10px;
     }
 
     button {
