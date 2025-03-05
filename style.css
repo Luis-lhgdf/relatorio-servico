@@ -45,6 +45,13 @@ label {
     display: block;
 }
 
+#descricaoServico {
+    padding: 8px;                 
+    font-size: 20px;               
+    color: #333;                  
+    width: 60%;
+    display: block;
+}
 
 #valor {
     padding: 8px;                 
