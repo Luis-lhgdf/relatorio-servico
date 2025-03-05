@@ -105,9 +105,10 @@ function gerarPDF() {
     doc.text(`Nome do Técnico: ${tecnico}`, 20, 50);
     doc.text(`CNPJ: ${cnpj}`, 20, 60);
     doc.text(`Razão Social: ${razaoSocial}`, 20, 70);
-    doc.text(`Descrição do Serviço:`, 20, 80);
-    doc.text(descricaoServico, 20, 80);
-    doc.text(`Valor: R$ ${valor}`, 20, 110);
+    doc.text(`Descrição do Serviço:`, 20, 80);    
+    const descricaoFormatada = doc.splitTextToSize(descricaoServico, 170); // Ajusta a largura do texto
+    doc.text(descricaoFormatada, 20, 90); // Move o texto para não sobrescrever
+    doc.text(`Valor: R$ ${valor}`, 20, 110 + descricaoFormatada.length * 6); 
     
     // Adiciona a assinatura do técnico
     const canvasTecnicoData = document.getElementById('assinaturaTecnico').toDataURL('image/png');
@@ -129,3 +130,8 @@ document.getElementById('osForm').addEventListener('submit', (e) => {
     gerarPDF();
 });
 
+document.getElementById('valor').addEventListener('input', function (e) {
+    let value = e.target.value.replace(/\D/g, ""); // Remove tudo que não for número
+    value = (parseInt(value, 10) / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); 
+    e.target.value = value;
+});
