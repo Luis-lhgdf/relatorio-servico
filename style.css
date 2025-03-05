@@ -77,7 +77,6 @@ canvas {
     max-width: 500px;
     height: 150px;
     border: 1px solid #000;
-    display: block;
     margin: auto;
 }
 
@@ -86,9 +85,7 @@ canvas {
     .container {
         width: 100%;
         padding: 10px;
-        border: 1px solid #000;
-        text-align: left;
-    }
+            }
 
     canvas {
         max-width: 100%;
