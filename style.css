@@ -31,22 +31,45 @@ label {
     padding: 8px;                 
     font-size: 18px;               
     color: #333;                  
-    width: 25%;
+    width: 20%;
 }
 
 #tecnico {
     padding: 8px;                 
     font-size: 18px;               
     color: #333;                  
-    width: 50%;
+    width: 30%;
+} 
+
+#cnpj {
+    padding: 8px;                 
+    font-size: 18px;               
+    color: #333;                  
+    width: 30%;
+    display: block;
 }
 
+#razaoSocial {
+    padding: 8px;                 
+    font-size: 18px;               
+    color: #333;                  
+    width: 60%;
+    display: block;
+}
+
+#descricaoServico {
+    padding: 8px;                 
+    font-size: 18px;               
+    color: #333;                  
+    width: 60%;
+    display: block;
+}
 
 #valor {
     padding: 8px;                 
     font-size: 18px;               
     color: #333;                  
-    width: 30%;
+    width: 15%;
 }
 
 input, textarea {
