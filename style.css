@@ -33,7 +33,7 @@ label {
     padding: 8px;                 
     font-size: 18px;               
     color: #333;                  
-    width: 35%;
+    width: 25%;
     display: block;
 }
 
@@ -101,7 +101,7 @@ canvas {
 /* Responsividade para telas menores */
 @media (max-width: 600px) {
     .container {
-        width: 80%;
+        width: 95%;
         padding: 15px;
     }
 
@@ -124,6 +124,6 @@ canvas {
     }
 
     canvas {
-        max-width: 100%;
+        max-width: 90%;
     }
 }
