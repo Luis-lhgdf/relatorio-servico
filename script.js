@@ -117,9 +117,7 @@ function gerarPDF() {
     doc.text(`CNPJ: ${cnpj}`, 20, 60);
     doc.text(`Razão Social: ${razaoSocial}`, 20, 70);
     doc.text(`Descrição do Serviço:`, 20, 80);
-    //doc.text(descricaoServico, 20, 80);
-    //doc.text(`Valor: R$ ${valor}`, 20, 110);
-    
+        
     const descricaoFormatada = doc.splitTextToSize(descricaoServico, 170); // Ajusta a largura do texto
     doc.text(descricaoFormatada, 20, 90); // Move o texto para não sobrescrever
     doc.text(`Valor: R$ ${valor}`, 20, 110 + descricaoFormatada.length * 6); 
