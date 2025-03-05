@@ -7,8 +7,7 @@ body {
 }
 
 .container {
-    width: 80%;
-    max-width: 1200px;
+    width: 60%;
     margin: 20px auto;
     padding: 20px;
     background-color: rgb(255, 255, 255);
@@ -42,29 +41,6 @@ label {
     width: 50%;
 }
 
-#cnpj {
-    padding: 8px;                 
-    font-size: 18px;               
-    color: #333;                  
-    width: 50%;
-    display: block;
-}
-
-#razaoSocial {
-    padding: 8px;                 
-    font-size: 18px;               
-    color: #333;                  
-    width: 50%;
-    display: block;
-}
-
-#descricaoServico {
-    padding: 8px;                 
-    font-size: 18px;               
-    color: #333;                  
-    width: 70%;
-    display: block;
-}
 
 #valor {
     padding: 8px;                 
@@ -91,47 +67,11 @@ button {
     font-size: 17px;
 }
 
-
 button:hover {
     background-color: #45a049;
 }
 
 canvas {
-    width: 100%;
-    max-width: 500px;
-    height: 2000px;
-    border: 1px solid #000;
-    touch-action: none; /* Evita comportamentos padrão de rolagem e zoom no canvas */
-    display: block;
-    margin: auto;
-}
-
-/* Responsividade para telas menores */
-@media (max-width: 600px) {
-    .container {
-        width: 95%;
-        padding: 15px;
-    }
-
-    h2 {
-        font-size: 30px;
-    }
+    margin-bottom: 10px;
     
-    label {
-        font-size: 18px;
-    }
-
-    input, textarea {
-        font-size: 16px;
-        padding: 8px;
-    }
-
-    button {
-        font-size: 16px;
-        padding: 10px;
-    }
-
-    canvas {
-        max-width: 100%;
-    }
 }
