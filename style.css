@@ -126,32 +126,3 @@ canvas {
     margin: auto;
 }
 
-/* Responsividade para telas menores */
-@media (max-width: 800px) {
-    .container {
-        width: 120%;
-        padding: 15px;
-    }
-
-    h2 {
-        font-size: 30px;
-    }
-    
-    label {
-        font-size: 18px;
-    }
-
-    input, textarea {
-        font-size: 18px;
-        padding: 10px;
-    }
-
-    button {
-        font-size: 16px;
-        padding: 10px;
-    }
-
-    canvas {
-        max-width: 100%;
-    }
-}
