@@ -110,20 +110,20 @@ canvas {
     }
     
     label {
-        font-size: 18px;
+        font-size: 10px;
     }
 
     input, textarea {
-        font-size: 16px;
+        font-size: 10px;
         padding: 8px;
     }
 
     button {
-        font-size: 16px;
-        padding: 10px;
+        font-size: 10px;
+        padding: 8px;
     }
 
     canvas {
-        max-width: 120%;
+        max-width: 100%;
     }
 }
