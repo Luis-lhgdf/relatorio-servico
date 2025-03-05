@@ -31,21 +31,21 @@ label {
     padding: 8px;                 
     font-size: 18px;               
     color: #333;                  
-    width: 20%;
+    width: 30%;
 }
 
 #tecnico {
     padding: 8px;                 
     font-size: 18px;               
     color: #333;                  
-    width: 30%;
+    width: 50%;
 } 
 
 #cnpj {
     padding: 8px;                 
     font-size: 18px;               
     color: #333;                  
-    width: 30%;
+    width: 50%;
     display: block;
 }
 
