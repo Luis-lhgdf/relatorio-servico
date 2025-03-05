@@ -91,6 +91,16 @@ button {
     font-size: 17px;
 }
 
+#geraOrdem {
+    background-color: #a97e18;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 17px;
+}
+
 #gerarPDF {
     background-color: #a97e18;
     color: white;
