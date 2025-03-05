@@ -73,8 +73,22 @@ button:hover {
 }
 
 canvas {
-    margin-bottom: 10px;
-    width: 80%;
-    max-width: 1200px;
+    width: 100%;
+    max-width: 500px;
+    height: 150px;
+    border: 1px solid #000;
+    display: block;
+    margin: auto;
 }
 
+/* Responsividade para telas menores */
+@media (max-width: 600px) {
+    .container {
+        width: 100%;
+        padding: 10px;
+    }
+
+    canvas {
+        max-width: 100%;
+    }
+}
