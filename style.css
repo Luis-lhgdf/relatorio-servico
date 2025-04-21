@@ -31,7 +31,7 @@ label {
     padding: 8px;                 
     font-size: 18px;               
     color: #333;                  
-    width: 30%;
+    width: 40%;
 }
 
 #tecnico {
@@ -69,7 +69,7 @@ label {
     padding: 8px;                 
     font-size: 18px;               
     color: #333;                  
-    width: 15%;
+    width: 30%;
 }
 
 input, textarea {
