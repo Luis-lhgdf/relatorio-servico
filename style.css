@@ -1,121 +1,137 @@
-:root {
-  --primary: #8391fd;
-  --accent: #a97e18;
-  --btn-hover: #45a049;
-}
+/* style.css */
 body {
-  font-family: Arial, sans-serif;
-  background-color: #f4f4f4;
-  margin: 0;
-  padding: 0;
+    font-family: Arial, sans-serif;
+    background-color: #f4f4f4;
+    margin: 0;
+    padding: 0;
 }
+
 .container {
-  max-width: 600px;
-  margin: 20px auto;
-  padding: 1rem;
-  background: #fff;
-  border-radius: 0.5rem;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    width: 80%;
+    max-width: 1200px;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: rgb(255, 255, 255);
+    border-radius: 10px;
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.1);
+    display: block;
 }
+
 h2 {
-  text-align: center;
-  font-size: 1.75rem;
-  margin-bottom: 1rem;
+    text-align: center;
+    font-size: 40px;
 }
-.form-group {
-  display: flex;
-  flex-direction: column;
-  margin-bottom: 1rem;
+
+label {
+    display: block;
+    margin-bottom: 5px;
+    font-weight: bold;
+    font-size: 12px;
 }
-.form-group label {
-  margin-bottom: 0.5rem;
-  font-weight: bold;
-  font-size: 1rem;
+
+#dataServico {
+    padding: 8px;                 
+    font-size: 12px;               
+    color: #333;                  
+    width: 30%;
+    display: block;
 }
-.form-group input,
-.form-group textarea {
-  padding: 0.5rem;
-  font-size: 1rem;
-  border: 1px solid #ccc;
-  border-radius: 0.25rem;
-  width: 100%;
+
+#tecnico {
+    padding: 8px;                 
+    font-size: 12px;               
+    color: #333;                  
+    width: 50%;
+    display: block;
 }
-@media (min-width: 600px) {
-  .form-group {
-    flex-direction: row;
-    align-items: center;
-  }
-  .form-group label {
-    width: 35%;
-    text-align: right;
-    margin-right: 1rem;
-  }
-  .form-group input,
-  .form-group textarea {
-    width: 65%;
-  }
+
+#cnpj {
+    padding: 8px;                 
+    font-size: 12px;               
+    color: #333;                  
+    width: 20%;
+    display: block;
 }
+
+#descricaoServico {
+    padding: 30px;                 
+    font-size: 12px;               
+    color: #333;                  
+    width: 60%;
+    display: block;
+}
+
+#valor {
+    padding: 8px;                 
+    font-size: 12px;               
+    color: #333;                  
+    width: 30%;
+    display: block;
+}
+
+input, textarea {
+    width: 99%;
+    padding: 10px;
+    font-size: 18px;
+    color: #333;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    margin-bottom: 15px;
+    display: block;
+}
+
 button {
-  background-color: var(--primary);
-  color: #fff;
-  padding: 0.75rem 1.5rem;
-  border: none;
-  border-radius: 0.25rem;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background-color 0.2s;
-  margin-right: 0.5rem;
+    background-color: #3518a9;
+    color: white;
+    padding: 8px 10px;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+    font-size: 10px;
+    display: block;
+    margin-top: 10px;
 }
-button#gerarPDF,
-button#osFormSubmit {
-  background-color: var(--accent);
-}
+
+
 button:hover {
-  background-color: var(--btn-hover);
+    background-color: #45a049;
 }
+
 canvas {
-  width: 100%;
-  max-width: 500px;
-  height: 150px;
-  border: 1px solid #000;
-  touch-action: none;
-  display: block;
-  margin: 0 auto 1rem;
-}
-#osPreview {
-  margin-top: 2rem;
-  padding: 1rem;
-  border: 1px dashed #ccc;
-  background: #fafafa;
-}
-#osPreview .logo {
-  display: block;
-  margin: 0 auto 1rem;
-  width: 100px;
-}
-#osPreview h2 {
-  margin-bottom: 1rem;
-}
-#osPreview p {
-  margin: 0.25rem 0;
-}
-#osPreview .assinaturas {
-  display: flex;
-  justify-content: space-between;
-  margin-top: 1rem;
-}
-#osPreview .assinatura img {
-  width: 150px;
-  height: auto;
-  border: 1px solid #000;
-}
-@media print {
-  body * { visibility: hidden; }
-  #osPreview, #osPreview * { visibility: visible; }
-  #osPreview {
-    position: absolute;
-    top: 0;
-    left: 0;
     width: 100%;
-  }
+    max-width: 500px;
+    height: 150px;
+    border: 1px solid #000;
+    display: block;
+    margin: auto;
+}
+
+/* Responsividade para telas menores */
+@media (max-width: 700px) {
+    .container {
+        width: 95%;
+        padding: 15px;
+    }
+
+    h2 {
+        font-size: 30px;
+    }
+    
+    label {
+        font-size: 10px;
+    }
+
+    input, textarea {
+        font-size: 10px;
+        padding: 8px;
+    }
+
+    button {
+        font-size: 10px;
+        padding: 8px;
+    }
+
+    canvas {
+        max-width: 100%;
+    }
 }
