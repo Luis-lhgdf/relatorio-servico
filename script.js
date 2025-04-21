@@ -1,137 +1,79 @@
-// Função para limpar a assinatura no canvas
-function limparAssinatura(tipo) {
-    const canvas = document.getElementById(`assinatura${tipo.charAt(0).toUpperCase() + tipo.slice(1)}`);
-    const context = canvas.getContext('2d');
-    context.clearRect(0, 0, canvas.width, canvas.height);
-}
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Ordem de Serviço</title>
+  <!-- CSS externo -->
+  <link rel="stylesheet" href="style.css">
+  <!-- Bibliotecas para PDF -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js" defer></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js" defer></script>
+  <!-- JavaScript externo -->
+  <script src="script.js" defer></script>
+</head>
+<body>
+  <div class="container">
+    <h2>Ordem de Serviço</h2>
+    <form id="osForm">
+      <div class="form-group">
+        <label for="dataServico">Data do Serviço:</label>
+        <input type="date" id="dataServico" required>
+      </div>
+      <div class="form-group">
+        <label for="tecnico">Técnico:</label>
+        <input type="text" id="tecnico" required>
+      </div>
+      <div class="form-group">
+        <label for="cnpj">CNPJ do Cliente:</label>
+        <input type="text" id="cnpj" maxlength="18" required>
+      </div>
+      <div class="form-group">
+        <label for="razaoSocial">Razão Social:</label>
+        <input type="text" id="razaoSocial" required>
+      </div>
+      <div class="form-group">
+        <label for="descricaoServico">Descrição do Serviço:</label>
+        <textarea id="descricaoServico" rows="4" required></textarea>
+      </div>
+      <div class="form-group">
+        <label for="valor">Valor (R$):</label>
+        <input type="text" id="valor" required>
+      </div>
+      <div class="form-group">
+        <label>Assinatura do Técnico:</label>
+        <canvas id="assinaturaTecnico"></canvas>
+        <button type="button" data-clear-signature="assinaturaTecnico">Limpar</button>
+      </div>
+      <div class="form-group">
+        <label>Assinatura do Cliente:</label>
+        <canvas id="assinaturaCliente"></canvas>
+        <button type="button" data-clear-signature="assinaturaCliente">Limpar</button>
+      </div>
+      <button type="submit" id="osFormSubmit">Gerar e Imprimir</button>
+      <button type="button" id="gerarPDF">Baixar PDF</button>
+    </form>
 
-// Função para capturar as coordenadas corretas do toque ou mouse
-function getPosicao(evento, canvas) {
-    const rect = canvas.getBoundingClientRect(); // Posição do canvas na tela
-    let x, y;
-
-    if (evento.touches) {
-        // Para dispositivos móveis (touch)
-        x = evento.touches[0].clientX - rect.left;
-        y = evento.touches[0].clientY - rect.top;
-    } else {
-        // Para desktop (mouse)
-        x = evento.offsetX || evento.layerX;
-        y = evento.offsetY || evento.layerY;
-    }
-
-    return { x, y };
-}
-
-// Função para configurar o canvas
-function configurarAssinatura(canvas) {
-    const context = canvas.getContext('2d');
-    let desenhando = false;
-
-    const iniciarDesenho = (evento) => {
-        evento.preventDefault(); // Previne o comportamento padrão (ex: rolagem da tela no celular)
-        desenhando = true;
-        const { x, y } = getPosicao(evento, canvas);
-        context.beginPath();
-        context.moveTo(x, y);
-    };
-
-    const desenhar = (evento) => {
-        if (!desenhando) return;
-        evento.preventDefault();
-        const { x, y } = getPosicao(evento, canvas);
-        context.lineTo(x, y);
-        context.stroke();
-    };
-
-    const pararDesenho = () => {
-        desenhando = false;
-    };
-
-    // Eventos para mouse (desktop)
-    canvas.addEventListener('mousedown', iniciarDesenho);
-    canvas.addEventListener('mousemove', desenhar);
-    canvas.addEventListener('mouseup', pararDesenho);
-    canvas.addEventListener('mouseleave', pararDesenho);
-
-    // Eventos para toque (mobile)
-    canvas.addEventListener('touchstart', iniciarDesenho, { passive: false });
-    canvas.addEventListener('touchmove', desenhar, { passive: false });
-    canvas.addEventListener('touchend', pararDesenho);
-    canvas.addEventListener('touchcancel', pararDesenho); // Caso o toque seja cancelado
-}
-
-// Aplicar a configuração nos canvases após o carregamento do DOM
-document.addEventListener("DOMContentLoaded", function () {
-    const canvasTecnico = document.getElementById('assinaturaTecnico');
-    const canvasCliente = document.getElementById('assinaturaCliente');
-    
-    // Ajustando canvas para celular e desktop
-    configurarAssinatura(canvasTecnico);
-    configurarAssinatura(canvasCliente);
-});
-
-// Função para formatar a data para o formato dd/mm/aaaa
-function formatarData(data) {
-    const partes = data.split('-');
-    return `${partes[2]}/${partes[1]}/${partes[0]}`;
-}
-
-// Função para gerar o PDF
-function gerarPDF() {
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-
-    // Adicionar o logo no PDF
-    const logo = 'assets/icons/Logo.jpg'; // Substitua pela sua imagem base64 ou caminho do arquivo
-    doc.addImage(logo, 'PNG', 150, 10, 50, 30); // Parâmetros: imagem, tipo, x, y, largura, altura
-    
-    const dataServico = document.getElementById('dataServico').value;
-    const tecnico = document.getElementById('tecnico').value;
-    const cnpj = document.getElementById('cnpj').value;
-    const razaoSocial = document.getElementById('razaoSocial').value;
-    const descricaoServico = document.getElementById('descricaoServico').value;
-    const valor = document.getElementById('valor').value;
-
-    // Formatando a data para dd/mm/aaaa
-    const dataFormatada = formatarData(dataServico);    
-
-    // Adiciona os dados da ordem de serviço
-    doc.setFont('helvetica', 'normal');
-    doc.setFontSize(15);
-    doc.setTextColor(0, 0, 0);
-    doc.text(`Ordem de Serviço`, 70, 20);
-    doc.text(`Data do Serviço: ${dataFormatada}`, 20, 40);
-    doc.text(`Nome do Técnico: ${tecnico}`, 20, 50);
-    doc.text(`CNPJ: ${cnpj}`, 20, 60);
-    doc.text(`Razão Social: ${razaoSocial}`, 20, 70);
-    doc.text(`Descrição do Serviço:`, 20, 80);    
-    const descricaoFormatada = doc.splitTextToSize(descricaoServico, 170); // Ajusta a largura do texto
-    doc.text(descricaoFormatada, 20, 90); // Move o texto para não sobrescrever
-    doc.text(`Valor: R$ ${valor}`, 20, 110 + descricaoFormatada.length * 6); 
-    
-    // Adiciona a assinatura do técnico
-    const canvasTecnicoData = document.getElementById('assinaturaTecnico').toDataURL('image/png');
-    doc.addImage(canvasTecnicoData, 'PNG', 20, 120, 100, 50);
-    doc.text(`Assinatura do Técnico`, 20, 170);
-
-    // Adiciona a assinatura do cliente
-    const canvasClienteData = document.getElementById('assinaturaCliente').toDataURL('image/png');
-    doc.addImage(canvasClienteData, 'PNG', 20, 180, 100, 50);
-    doc.text(`Assinatura do Cliente`, 20, 230);
-
-    // Gera o PDF
-    doc.save('ordem_de_servico.pdf');
-}
-
-// Impede o envio do formulário para gerar PDF
-document.getElementById('osForm').addEventListener('submit', (e) => {
-    e.preventDefault();
-    gerarPDF();
-});
-
-document.getElementById('valor').addEventListener('input', function (e) {
-    let value = e.target.value.replace(/\D/g, ""); // Remove tudo que não for número
-    value = (parseInt(value, 10) / 100).toLocaleString('pt-BR', { style: 'currency', currency: 'BRL' }); 
-    e.target.value = value;
-});
+    <!-- Preview da ordem de serviço -->
+    <div id="osPreview">
+      <img src="assets/icons/Logo.jpg" alt="Logo" class="logo">
+      <h2>Ordem de Serviço</h2>
+      <p><strong>Data do Serviço:</strong> <span id="pv-data"></span></p>
+      <p><strong>Técnico:</strong> <span id="pv-tec"></span></p>
+      <p><strong>CNPJ:</strong> <span id="pv-cnpj"></span></p>
+      <p><strong>Razão Social:</strong> <span id="pv-razao"></span></p>
+      <p><strong>Descrição:</strong></p>
+      <p id="pv-desc"></p>
+      <p><strong>Valor:</strong> <span id="pv-valor"></span></p>
+      <div class="assinaturas">
+        <div class="assinatura">
+          <strong>Assinatura Técnico</strong><br>
+          <img id="pv-tec-sign" alt="Assinatura Técnico">
+        </div>
+        <div class="assinatura">
+          <strong>Assinatura Cliente</strong><br>
+          <img id="pv-cli-sign" alt="Assinatura Cliente">
+        </div>
+      </div>
+    </div>
+  </div>
