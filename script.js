@@ -76,8 +76,6 @@ function formatarData(data) {
     const partes = data.split('-');
     return `${partes[2]}/${partes[1]}/${partes[0]}`;
 }
-function formatCNPJ(e) { /* ... */ }
-function formatCurrency(e) { /* ... */ }
 
 // Função para gerar o PDF
 function gerarPDF() {
