@@ -1,12 +1,10 @@
 /*script.js*/
 // Ajusta canvas para alta DPI
-function resizeCanvasForDPR(canvas) {
   const dpr = window.devicePixelRatio || 1;
   const rect = canvas.getBoundingClientRect();
   canvas.width = rect.width * dpr;
   canvas.height = rect.height * dpr;
-  const ctx = canvas.getContext('2d');
-  ctx.scale(dpr, dpr);
+  const ctx = canvas.getContext('2d');\ n  ctx.scale(dpr, dpr);
   ctx.lineWidth = 2;
 }
 
@@ -29,36 +27,27 @@ function enableSignature(canvas) {
   );
 }
 
-// Formata CNPJ
-function formatCNPJ(e) {
-  let v = e.target.value.replace(/\D/g, '');
-  v = v.padEnd(14, '_').slice(0,14);
-  e.target.value = v.replace(/(\d{2})(\d{3})(\d{3})(\d{4})(\d{2})/, (_,a,b,c,d,f) =>
-    `${a}.${b}.${c}/${d}-${f}`
-  );
-}
-
-// Formata valor como moeda
-function formatCurrency(e) {
-  let v = e.target.value.replace(/\D/g, '');
-  v = (parseInt(v, 10) / 100).toLocaleString('pt-BR', {
-    style: 'currency', currency: 'BRL'
-  });
-  e.target.value = v;
-}
-
+// Máscaras e formatações
+function formatCNPJ(e) { /* ... */ }
+function formatCurrency(e) { /* ... */ }
 // Preenche dados no preview
-function populatePreview() {
-  const data = document.getElementById('dataServico').value;
-  const partes = data.split('-');
-  document.getElementById('pv-data').textContent = `${partes[2]}/${partes[1]}/${partes[0]}`;
-  document.getElementById('pv-tec').textContent = document.getElementById('tecnico').value;
-  document.getElementById('pv-cnpj').textContent = document.getElementById('cnpj').value;
-  document.getElementById('pv-razao').textContent = document.getElementById('razaoSocial').value;
-  document.getElementById('pv-desc').textContent = document.getElementById('descricaoServico').value;
-  document.getElementById('pv-valor').textContent = document.getElementById('valor').value;
-  document.getElementById('pv-tec-sign').src = document.getElementById('assinaturaTecnico').toDataURL();
-  document.getElementById('pv-cli-sign').src = document.getElementById('assinaturaCliente').toDataURL();
+function populatePreview() { /* ... */ }
+
+// Geração de PDF com paginação
+function gerarPDF() {
+  populatePreview();
+  const { jsPDF } = window.jspdf;
+  const doc = new jsPDF('p', 'pt', 'a4');
+  const preview = document.getElementById('osPreview');
+  doc.html(preview, {
+    x: 20,
+    y: 20,
+    html2canvas: { scale: 2, useCORS: true },
+    margin: [20, 20, 20, 20],
+    autoPaging: 'text',
+    width: doc.internal.pageSize.getWidth() - 40,
+    callback: pdf => pdf.save('ordem_de_servico.pdf')
+  });
 }
 
 // Inicialização
@@ -82,13 +71,6 @@ document.addEventListener('DOMContentLoaded', () => {
   });
   document.getElementById('gerarPDF').addEventListener('click', e => {
     e.preventDefault();
-    populatePreview();
-    const { jsPDF } = window.jspdf;
-    const doc = new jsPDF();
-    doc.html(document.getElementById('osPreview'), {
-      callback: pdf => pdf.save('ordem_de_servico.pdf'),
-      x: 10, y: 10,
-      html2canvas: { scale: 0.5 }
-    });
+    gerarPDF();
   });
 });
