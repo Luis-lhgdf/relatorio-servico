@@ -1,3 +1,5 @@
+import { formatarDataBR, formatarCNPJ, formatarValor } from './utils.js';
+
 // Função para controlar a exibição do campo de técnico
 function setupTecnicoField() {
     const tecnicoSelect = document.getElementById('tecnico');
@@ -13,51 +15,6 @@ function setupTecnicoField() {
             tecnicoOutroInput.value = '';
         }
     });
-}
-
-// Função para formatar CNPJ
-function formatarCNPJ(cnpj) {
-    // Remove tudo que não é número
-    cnpj = cnpj.replace(/\D/g, '');
-    
-    // Limita a 14 dígitos
-    cnpj = cnpj.substring(0, 14);
-    
-    // Aplica a máscara
-    if (cnpj.length > 12) {
-        cnpj = cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4})(\d{2}).*/, '$1.$2.$3/$4-$5');
-    } else if (cnpj.length > 8) {
-        cnpj = cnpj.replace(/^(\d{2})(\d{3})(\d{3})(\d{4}).*/, '$1.$2.$3/$4');
-    } else if (cnpj.length > 5) {
-        cnpj = cnpj.replace(/^(\d{2})(\d{3})(\d{3}).*/, '$1.$2.$3');
-    } else if (cnpj.length > 2) {
-        cnpj = cnpj.replace(/^(\d{2})(\d{3}).*/, '$1.$2');
-    }
-    
-    return cnpj;
-}
-
-// Função para formatar valor em reais
-function formatarValor(valor) {
-    // Remove tudo que não é número
-    valor = valor.replace(/\D/g, '');
-    
-    // Se o valor estiver vazio, retorna vazio
-    if (!valor) return '';
-    
-    // Converte para número e divide por 100 para considerar os centavos
-    const numero = parseInt(valor);
-    
-    // Se não for um número válido, retorna vazio
-    if (isNaN(numero)) return '';
-    
-    // Formata como moeda brasileira
-    return new Intl.NumberFormat('pt-BR', {
-        style: 'currency',
-        currency: 'BRL',
-        minimumFractionDigits: 2,
-        maximumFractionDigits: 2
-    }).format(numero / 100);
 }
 
 // Função para configurar os campos formatados
