@@ -11,6 +11,72 @@ window.addEventListener('DOMContentLoaded', () => {
     btn.classList.add('bg-gray-400', 'cursor-not-allowed');
     btn.classList.remove('bg-dark-700', 'hover:bg-dark-800');
     try {
+      // Validação dos campos obrigatórios
+      const obrigatorios = [
+        { id: 'dataServico', nome: 'Data do Serviço' },
+        { id: 'status', nome: 'Status' },
+        { id: 'nomeFantasia', nome: 'Nome Fantasia (Cliente)' },
+        { id: 'cnpjCliente', nome: 'CNPJ (Cliente)' },
+        { id: 'equipamento', nome: 'Equipamentos Atendidos' },
+        { id: 'defeito', nome: 'Defeito Relatado' },
+        { id: 'servico', nome: 'Serviço Realizado' },
+        { id: 'materiais', nome: 'Materiais Utilizados' },
+        { id: 'quantidade', nome: 'Quantidade (Materiais)' },
+        { id: 'garantia', nome: 'Garantia Oferecida' }
+      ];
+      // Se técnico for outro, validar o campo de texto, senão o select
+      if (document.getElementById('tecnico').value === 'outro') {
+        obrigatorios.push({ id: 'tecnicoOutro', nome: 'Técnico Responsável' });
+      } else {
+        obrigatorios.push({ id: 'tecnico', nome: 'Técnico Responsável' });
+      }
+      for (const campo of obrigatorios) {
+        const el = document.getElementById(campo.id);
+        if (!el || !el.value.trim()) {
+          if (typeof showToast === 'function') {
+            showToast(`Preencha o campo obrigatório: ${campo.nome}`, false);
+          } else {
+            alert(`Preencha o campo obrigatório: ${campo.nome}`);
+          }
+          btn.disabled = false;
+          btn.textContent = 'Gerar PDF';
+          btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+          btn.classList.add('bg-dark-700', 'hover:bg-dark-800');
+          return;
+        }
+      }
+      // Validação das assinaturas
+      const assinaturaTecnico = document.getElementById('assinaturaTecnico');
+      const assinaturaCliente = document.getElementById('assinaturaCliente');
+      function isCanvasVazio(canvas) {
+        const ctx = canvas.getContext('2d');
+        const pixel = ctx.getImageData(0, 0, canvas.width, canvas.height).data;
+        return !Array.from(pixel).some(channel => channel !== 0);
+      }
+      if (isCanvasVazio(assinaturaTecnico)) {
+        if (typeof showToast === 'function') {
+          showToast('A assinatura do Técnico é obrigatória!', false);
+        } else {
+          alert('A assinatura do Técnico é obrigatória!');
+        }
+        btn.disabled = false;
+        btn.textContent = 'Gerar PDF';
+        btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+        btn.classList.add('bg-dark-700', 'hover:bg-dark-800');
+        return;
+      }
+      if (isCanvasVazio(assinaturaCliente)) {
+        if (typeof showToast === 'function') {
+          showToast('A assinatura do Cliente é obrigatória!', false);
+        } else {
+          alert('A assinatura do Cliente é obrigatória!');
+        }
+        btn.disabled = false;
+        btn.textContent = 'Gerar PDF';
+        btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+        btn.classList.add('bg-dark-700', 'hover:bg-dark-800');
+        return;
+      }
       const get = id => document.getElementById(id)?.value || '';
       const getCheck = id => document.getElementById(id)?.checked;
       let tecnico = get('tecnico');
@@ -18,8 +84,9 @@ window.addEventListener('DOMContentLoaded', () => {
         tecnico = get('tecnicoOutro');
       }
       const obterAssinaturaBase64 = tipo => {
-        const canvas = document.getElementById(tipo === 'tecnico' ? 'assinaturaTecnico' : 'assinaturaCliente');
-        return canvas ? canvas.toDataURL('image/png') : null;
+        if (tipo === 'tecnico') return assinaturaTecnico ? assinaturaTecnico.toDataURL('image/png') : null;
+        if (tipo === 'cliente') return assinaturaCliente ? assinaturaCliente.toDataURL('image/png') : null;
+        return null;
       };
       const pdf = new window.jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
       let y = 18;
@@ -88,10 +155,10 @@ window.addEventListener('DOMContentLoaded', () => {
       pdf.text('Assinatura do Técnico:', labelX, y);
       pdf.text('Assinatura do Cliente:', 110, y);
       y += 2;
-      const assinaturaTecnico = obterAssinaturaBase64('tecnico');
-      const assinaturaCliente = obterAssinaturaBase64('cliente');
-      if (assinaturaTecnico) pdf.addImage(assinaturaTecnico, 'PNG', labelX, y, 80, 24);
-      if (assinaturaCliente) pdf.addImage(assinaturaCliente, 'PNG', 110, y, 80, 24);
+      const assinaturaTecnicoImg = obterAssinaturaBase64('tecnico');
+      const assinaturaClienteImg = obterAssinaturaBase64('cliente');
+      if (assinaturaTecnicoImg) pdf.addImage(assinaturaTecnicoImg, 'PNG', labelX, y, 80, 24);
+      if (assinaturaClienteImg) pdf.addImage(assinaturaClienteImg, 'PNG', 110, y, 80, 24);
       y += 28;
       pdf.setFont(undefined, 'normal');
       pdf.setFontSize(9);
@@ -99,7 +166,11 @@ window.addEventListener('DOMContentLoaded', () => {
       pdf.text('Gerado automaticamente pelo sistema Refrigeração Fidelis', 105, 287, {align:'center'});
       pdf.save('ordem-de-servico.pdf');
     } catch (err) {
-      alert('Erro ao gerar PDF!');
+      if (typeof showToast === 'function') {
+        showToast('Erro ao gerar PDF!', false);
+      } else {
+        alert('Erro ao gerar PDF!');
+      }
       console.error(err);
     } finally {
       btn.disabled = false;
