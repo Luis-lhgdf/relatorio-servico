@@ -1,5 +1,4 @@
 // Gera PDF fiel ao formulário, campo a campo, com layout responsivo e espaçado
-import('https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js');
 import { formatarDataBR } from './utils.js';
 
 window.addEventListener('DOMContentLoaded', () => {
