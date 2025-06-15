@@ -39,6 +39,10 @@ window.addEventListener('DOMContentLoaded', () => {
       if (isSuccess) {
         showToast('Ordem enviada com sucesso!', true);
         form.reset();
+        if (window.limparAssinatura) {
+          window.limparAssinatura('tecnico');
+          window.limparAssinatura('cliente');
+        }
       } else {
         showToast('Erro ao enviar ordem!', false);
       }
