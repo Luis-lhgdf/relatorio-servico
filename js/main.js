@@ -5,16 +5,24 @@ function setupTecnicoField() {
     const tecnicoSelect = document.getElementById('tecnico');
     const tecnicoOutroInput = document.getElementById('tecnicoOutro');
 
-    tecnicoSelect.addEventListener('change', function() {
-        if (this.value === 'outro') {
+    function atualizarNames() {
+        if (tecnicoSelect.value === 'outro') {
             tecnicoOutroInput.style.display = 'block';
             tecnicoOutroInput.required = true;
+            tecnicoSelect.name = '';
+            tecnicoOutroInput.name = 'Técnico';
         } else {
             tecnicoOutroInput.style.display = 'none';
             tecnicoOutroInput.required = false;
             tecnicoOutroInput.value = '';
+            tecnicoSelect.name = 'Técnico';
+            tecnicoOutroInput.name = '';
         }
-    });
+    }
+
+    tecnicoSelect.addEventListener('change', atualizarNames);
+    // Garante o comportamento correto ao carregar a página
+    atualizarNames();
 }
 
 // Função para configurar os campos formatados
