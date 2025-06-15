@@ -3,7 +3,10 @@ node_modules/
 package-lock.json
 
 # Arquivos de build
-dist/
+# Ignorar dist exceto o CSS final
+dist/*
+!dist/tailwind.css
+
 build/
 
 # Arquivos do sistema
