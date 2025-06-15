@@ -91,6 +91,3 @@ function doPost(e) {
 Baseado em: [levinunnink/html-form-to-google-sheet](https://github.com/levinunnink/html-form-to-google-sheet)  
 Adaptação para integração com sistema de Ordem de Serviço — Refrigeração Fidelis.
 
----
-
-Se precisar de exemplos de formulário HTML ou de configuração, consulte o repositório original ou peça aqui! 
