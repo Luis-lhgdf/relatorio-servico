@@ -43,77 +43,78 @@
     <!-- Título Principal -->
     <div class="text-center border-b border-dark-200 pb-4 sm:pb-6 mb-6 sm:mb-8">
       <h2 class="text-2xl sm:text-3xl font-bold text-dark-900 mb-2">Ordem de Serviço</h2>
+      <p class="text-sm text-dark-600">* Campos obrigatórios</p>
     </div>
 
     <!-- Formulário -->
-lim    <form id="relatorioForm" class="space-y-4 sm:space-y-6">
+    <form id="relatorioForm" method="POST" action="https://script.google.com/macros/s/AKfycbw0hRiUm_Yq4C3POYvudBwDKbILdk6b_Ok70M4TX0GkZ-beLcgbmWcXcWH0gUMb0Re9/exec" class="space-y-4 sm:space-y-6">
       <!-- Data e Status -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="dataServico" class="block text-sm font-medium text-dark-700">Data do Serviço *</label>
-          <input type="date" id="dataServico" required class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
+          <label for="dataServico" class="block text-sm font-medium text-dark-700">Data do Serviço <span class="text-red-500">*</span></label>
+          <input type="date" id="dataServico" name="Data do Serviço" required value="2024-06-01" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
         </div>
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="status" class="block text-sm font-medium text-dark-700">Status</label>
-          <input type="text" id="status" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" required />
+          <label for="status" class="block text-sm font-medium text-dark-700">Status <span class="text-red-500">*</span></label>
+          <input type="text" id="status" name="Status" required value="Finalizado" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
         </div>
       </div>
 
       <!-- Técnico -->
       <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-        <label for="tecnico" class="block text-sm font-medium text-dark-700">Técnico Responsável</label>
-        <select id="tecnico" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" required>
+        <label for="tecnico" class="block text-sm font-medium text-dark-700">Técnico Responsável <span class="text-red-500">*</span></label>
+        <select id="tecnico" name="Técnico" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" required>
           <option value="">Selecione o técnico</option>
-          <option value="Everaldo Fidelis">Everaldo Fidelis</option>
+          <option value="Everaldo Fidelis" selected>Everaldo Fidelis</option>
           <option value="Junior Fidelis">Junior Fidelis</option>
           <option value="outro">Outro</option>
         </select>
-        <input type="text" id="tecnicoOutro" placeholder="Nome do outro técnico" class="mt-2 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" style="display: none;" />
+        <input type="text" id="tecnicoOutro" name="Técnico" placeholder="Nome do outro técnico" class="mt-2 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all hidden" />
       </div>
 
       <!-- Cliente -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="nomeFantasia" class="block text-sm font-medium text-dark-700">Nome Fantasia (Cliente)</label>
-          <input type="text" id="nomeFantasia" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" required />
+          <label for="nomeFantasia" class="block text-sm font-medium text-dark-700">Nome Fantasia (Cliente) <span class="text-red-500">*</span></label>
+          <input type="text" id="nomeFantasia" name="Nome Fantasia" required value="Cliente Exemplo" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
         </div>
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="cnpjCliente" class="block text-sm font-medium text-dark-700">CNPJ (Cliente)</label>
-          <input type="text" id="cnpjCliente" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" required />
+          <label for="cnpjCliente" class="block text-sm font-medium text-dark-700">CNPJ (Cliente) <span class="text-red-500">*</span></label>
+          <input type="text" id="cnpjCliente" name="CNPJ do Cliente" required value="12.345.678/0001-99" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
         </div>
       </div>
 
       <!-- Equipamento e Defeito -->
       <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-        <label for="equipamento" class="block text-sm font-medium text-dark-700">Equipamentos Atendidos</label>
-        <input type="text" id="equipamento" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" required />
+        <label for="equipamento" class="block text-sm font-medium text-dark-700">Equipamentos Atendidos <span class="text-red-500">*</span></label>
+        <input type="text" id="equipamento" name="Equipamentos" required value="Geladeira" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
       </div>
       <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-        <label for="defeito" class="block text-sm font-medium text-dark-700">Defeito Relatado</label>
-        <textarea id="defeito" rows="3" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" required></textarea>
+        <label for="defeito" class="block text-sm font-medium text-dark-700">Defeito Relatado <span class="text-red-500">*</span></label>
+        <textarea id="defeito" name="Defeito" rows="3" required class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all">Não liga</textarea>
       </div>
 
       <!-- Serviço e Materiais -->
       <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-        <label for="servico" class="block text-sm font-medium text-dark-700">Serviço Realizado</label>
-        <textarea id="servico" rows="3" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" required></textarea>
+        <label for="servico" class="block text-sm font-medium text-dark-700">Serviço Realizado <span class="text-red-500">*</span></label>
+        <textarea id="servico" name="Serviço Realizado" rows="3" required class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all">Troca de fusível</textarea>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="materiais" class="block text-sm font-medium text-dark-700">Materiais Utilizados</label>
-          <textarea id="materiais" rows="3" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" required></textarea>
+          <label for="materiais" class="block text-sm font-medium text-dark-700">Materiais Utilizados <span class="text-red-500">*</span></label>
+          <textarea id="materiais" name="Materiais" rows="3" required class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all">Fusível</textarea>
         </div>
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="quantidade" class="block text-sm font-medium text-dark-700">Quantidade (Materiais)</label>
-          <input type="number" id="quantidade" min="0" step="1" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" required />
+          <label for="quantidade" class="block text-sm font-medium text-dark-700">Quantidade (Materiais) <span class="text-red-500">*</span></label>
+          <input type="number" id="quantidade" name="Quantidade" min="0" step="1" required value="1" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
         </div>
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="valorTotalMaterial" class="block text-sm font-medium text-dark-700">Valor Total (Material)</label>
+          <label for="valorTotalMaterial" class="block text-sm font-medium text-dark-700">Valor Total (Material) <span class="text-red-500">*</span></label>
           <div class="mt-1 flex items-center gap-2">
-            <input type="number" id="valorTotalMaterial" min="0" step="0.01" class="w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" required />
+            <input type="text" id="valorTotalMaterial" name="Valor Total Material" required value="10,00" class="w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
             <label class="inline-flex items-center">
-              <input type="checkbox" id="exibirValorMaterial" class="h-4 w-4 text-dark-600 focus:ring-dark-400">
+              <input type="checkbox" id="exibirValorMaterial" name="Exibir Valor Material" class="h-4 w-4 text-dark-600 focus:ring-dark-400" checked>
               <span class="ml-2 text-sm text-dark-700">Exibir na impressão</span>
             </label>
           </div>
@@ -123,33 +124,37 @@ lim    <form id="relatorioForm" class="space-y-4 sm:space-y-6">
       <!-- Valor e Garantia -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="valorServico" class="block text-sm font-medium text-dark-700">Valor Total do Serviço</label>
+          <label for="valorServico" class="block text-sm font-medium text-dark-700">Valor Total do Serviço <span class="text-red-500">*</span></label>
           <div class="mt-1 flex items-center gap-2">
-            <input type="number" id="valorServico" min="0" step="0.01" class="w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" required />
+            <input type="text" id="valorServico" name="Valor Serviço" required value="100,00" class="w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
             <label class="inline-flex items-center">
-              <input type="checkbox" id="exibirValorServico" class="h-4 w-4 text-dark-600 focus:ring-dark-400">
+              <input type="checkbox" id="exibirValorServico" name="Exibir Valor Serviço" class="h-4 w-4 text-dark-600 focus:ring-dark-400" checked>
               <span class="ml-2 text-sm text-dark-700">Exibir na impressão</span>
             </label>
           </div>
         </div>
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="garantia" class="block text-sm font-medium text-dark-700">Garantia Oferecida</label>
-          <input type="text" id="garantia" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" required />
+          <label for="garantia" class="block text-sm font-medium text-dark-700">Garantia Oferecida <span class="text-red-500">*</span></label>
+          <input type="text" id="garantia" name="Garantia" required value="3 meses" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
         </div>
       </div>
 
       <!-- Assinaturas -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label class="block font-medium text-dark-700 mb-2">Assinatura do Técnico</label>
-          <canvas id="assinaturaTecnico" class="border-2 border-dark-200 w-full h-32 rounded-lg bg-white"></canvas>
-          <button type="button" onclick="limparAssinatura('tecnico')" class="mt-2 text-sm text-dark-600 hover:text-dark-800 transition-colors">Limpar</button>
+          <label class="block font-medium text-dark-700 mb-2">Assinatura do Técnico <span class="text-red-500">*</span></label>
+          <canvas id="assinaturaTecnico" name="Assinatura Técnico" class="border-2 border-dark-200 w-full h-32 rounded-lg bg-white"></canvas>
+          <button type="button" onclick="limparAssinatura('tecnico')" class="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+            Limpar Assinatura
+          </button>
         </div>
 
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label class="block font-medium text-dark-700 mb-2">Assinatura do Cliente</label>
-          <canvas id="assinaturaCliente" class="border-2 border-dark-200 w-full h-32 rounded-lg bg-white"></canvas>
-          <button type="button" onclick="limparAssinatura('cliente')" class="mt-2 text-sm text-dark-600 hover:text-dark-800 transition-colors">Limpar</button>
+          <label class="block font-medium text-dark-700 mb-2">Assinatura do Cliente <span class="text-red-500">*</span></label>
+          <canvas id="assinaturaCliente" name="Assinatura Cliente" class="border-2 border-dark-200 w-full h-32 rounded-lg bg-white"></canvas>
+          <button type="button" onclick="limparAssinatura('cliente')" class="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+            Limpar Assinatura
+          </button>
         </div>
       </div>
 
@@ -166,9 +171,8 @@ lim    <form id="relatorioForm" class="space-y-4 sm:space-y-6">
   </div>
 
   <!-- Scripts -->
-  <script src="js/assinatura.js" type="module"></script>
-  <script src="js/google-sheets.js" type="module"></script>
-  <script src="js/main.js" type="module"></script>
-  <script src="js/gerarPDF.js" type="module"></script>
+  <script src="js/assinatura.js"></script>
+  <script src="js/main.js"></script>
+  <script src="js/gerarPDF.js"></script>
 </body>
 </html>
