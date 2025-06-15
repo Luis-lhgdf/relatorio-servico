@@ -44,6 +44,7 @@ js/
   ├─ gerarPDF.js     # Geração do PDF fiel ao frontend
   ├─ toast-form.js   # Feedback visual (toast) no envio do formulário
   └─ utils.js        # Funções utilitárias (formatação de data, CNPJ, valores)
+README-appscript.md  # Documentação do Google Apps Script para integração com Sheets
 ```
 
 ---
@@ -99,3 +100,9 @@ js/
 ## Licença
 
 Projeto de uso interno para Refrigeração Fidelis.  
+
+---
+
+## Documentação da Integração com Google Sheets
+
+Consulte o arquivo [`README-appscript.md`](./README-appscript.md) para ver o passo a passo de configuração do Google Apps Script e integração com o formulário HTML.  
