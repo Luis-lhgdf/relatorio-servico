@@ -13,6 +13,7 @@ Este script permite receber dados de um formulário HTML diretamente em uma plan
 - O formulário HTML do seu sistema envia os dados via POST para a URL do Apps Script publicado como Web App.
 - O Apps Script recebe os dados, faz o mapeamento automático para as colunas da planilha e salva cada submissão em uma nova linha.
 - O campo especial `"Data de Envio"` (se existir na planilha) é preenchido automaticamente com a data/hora do envio.
+- **Campos especiais:** Os materiais são consolidados em uma única célula com quebras de linha, e os valores calculados são enviados corretamente.
 
 ---
 
@@ -59,6 +60,39 @@ function doPost(e) {
 
 ---
 
+## Estrutura da Planilha
+
+A planilha deve ter as seguintes colunas na primeira linha (nomes exatos dos campos do formulário):
+
+### Campos Básicos
+- `Data do Serviço`
+- `Status`
+- `Técnico Responsável`
+- `Outro Técnico` (opcional)
+- `Nome Fantasia`
+- `CNPJ`
+- `Endereço`
+- `Telefone`
+- `Email`
+- `Descrição do Serviço`
+- `Observações`
+- `Garantia`
+
+### Campos de Materiais e Valores
+- `Materiais` (consolidado com quebras de linha)
+- `Valor Total dos Materiais`
+- `Valor da Mão de Obra`
+- `Valor Total do Serviço`
+
+### Campos de Assinatura
+- `Assinatura Técnico`
+- `Assinatura Cliente`
+
+### Campo Automático
+- `Data de Envio` (preenchido automaticamente)
+
+---
+
 ## Passos para configurar
 
 1. **Crie uma nova planilha no Google Sheets.**
@@ -83,6 +117,16 @@ function doPost(e) {
 - **Os nomes dos campos do formulário (`name="..."`) DEVEM ser idênticos aos nomes das colunas da planilha.**
 - Se mudar o nome de uma coluna, atualize também o formulário, ou os dados não serão salvos corretamente.
 - O campo `"Data de Envio"` (se existir) será preenchido automaticamente com a data/hora do envio.
+- **Materiais:** O campo `"Materiais"` receberá todos os materiais consolidados em uma única célula, separados por quebras de linha.
+- **Valores calculados:** Os campos `"Valor Total dos Materiais"` e `"Valor Total do Serviço"` são calculados automaticamente no formulário e enviados como valores numéricos.
+
+---
+
+## Exemplo de Estrutura da Planilha
+
+| Data do Serviço | Status | Técnico Responsável | Nome Fantasia | CNPJ | Materiais | Valor Total dos Materiais | Valor da Mão de Obra | Valor Total do Serviço | Assinatura Técnico | Assinatura Cliente | Data de Envio |
+|-----------------|--------|-------------------|---------------|------|-----------|---------------------------|---------------------|------------------------|-------------------|-------------------|---------------|
+| 15/12/2024      | Concluído | João Silva | Empresa ABC | 12.345.678/0001-90 | 1x Compressor R$ 500,00\n2x Gás R$ 100,00 | 700,00 | 200,00 | 900,00 | [assinatura] | [assinatura] | 15/12/2024 14:30 |
 
 ---
 
