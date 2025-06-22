@@ -8,20 +8,14 @@ window.addEventListener('DOMContentLoaded', () => {
     btn.disabled = true;
     btn.textContent = 'Gerando PDF...';
     btn.classList.add('bg-gray-400', 'cursor-not-allowed');
-    btn.classList.remove('bg-dark-700', 'hover:bg-dark-800');
+    btn.classList.remove('bg-dark-700', 'hover:bg-dark-900');
     try {
       // Validação dos campos obrigatórios
       const obrigatorios = [
         { id: 'dataServico', nome: 'Data do Serviço' },
         { id: 'status', nome: 'Status' },
         { id: 'nomeFantasia', nome: 'Nome Fantasia (Cliente)' },
-        { id: 'cnpjCliente', nome: 'CNPJ (Cliente)' },
-        { id: 'equipamento', nome: 'Equipamentos Atendidos' },
-        { id: 'defeito', nome: 'Defeito Relatado' },
-        { id: 'servico', nome: 'Serviço Realizado' },
-        { id: 'materiais', nome: 'Materiais Utilizados' },
-        { id: 'quantidade', nome: 'Quantidade (Materiais)' },
-        { id: 'garantia', nome: 'Garantia Oferecida' }
+        { id: 'cnpjCliente', nome: 'CNPJ (Cliente)' }
       ];
       // Se técnico for outro, validar o campo de texto, senão o select
       if (document.getElementById('tecnico').value === 'outro') {
@@ -40,7 +34,7 @@ window.addEventListener('DOMContentLoaded', () => {
           btn.disabled = false;
           btn.textContent = 'Gerar PDF';
           btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-          btn.classList.add('bg-dark-700', 'hover:bg-dark-800');
+          btn.classList.add('bg-dark-700', 'hover:bg-dark-900');
           return;
         }
       }
@@ -61,7 +55,7 @@ window.addEventListener('DOMContentLoaded', () => {
         btn.disabled = false;
         btn.textContent = 'Gerar PDF';
         btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-        btn.classList.add('bg-dark-700', 'hover:bg-dark-800');
+        btn.classList.add('bg-dark-700', 'hover:bg-dark-900');
         return;
       }
       if (isCanvasVazio(assinaturaCliente)) {
@@ -73,7 +67,7 @@ window.addEventListener('DOMContentLoaded', () => {
         btn.disabled = false;
         btn.textContent = 'Gerar PDF';
         btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-        btn.classList.add('bg-dark-700', 'hover:bg-dark-800');
+        btn.classList.add('bg-dark-700', 'hover:bg-dark-900');
         return;
       }
       const get = id => document.getElementById(id)?.value || '';
@@ -88,23 +82,36 @@ window.addEventListener('DOMContentLoaded', () => {
         return null;
       };
       const pdf = new window.jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-      let y = 18;
-      // Cabeçalho com logo
+      
+      // --- Cabeçalho com fundo escuro ---
+      let y = 15; // Posição inicial do cabeçalho
+      pdf.setFillColor(0, 0, 0); // Cor de fundo (dark-900)
+      pdf.roundedRect(15, y, 180, 28, 3, 3, 'F'); // Desenha o retângulo com bordas arredondadas (x, y, largura, altura, raio)
+
+      y += 4; // Padding interno
+
+      // Adiciona o logo
       try {
         const img = new Image();
         img.src = 'assets/icon.png';
         await new Promise(res => { img.onload = res; });
-        pdf.addImage(img, 'PNG', 15, y, 18, 18);
+        pdf.addImage(img, 'PNG', 20, y, 18, 18);
       } catch {}
+
+      // Adiciona os textos com cores claras
+      pdf.setTextColor(255, 255, 255); // Cor do texto: Branco
       pdf.setFontSize(18);
-      pdf.setTextColor(40,40,40);
-      pdf.text('Refrigeração Fidelis', 36, y+8);
+      pdf.text('Refrigeração Fidelis', 42, y + 8);
+
+      pdf.setTextColor(203, 213, 225); // Cor do texto: Cinza claro (gray-300)
       pdf.setFontSize(10);
-      pdf.setTextColor(100,100,100);
-      pdf.text('CNPJ: 45.191.572/0001-33', 36, y+14);
-      pdf.text('Tel: (11) 91671-5875', 36, y+18);
-      pdf.text('refrigeracaofidelis@outlook.com', 36, y+22);
-      y += 26;
+      pdf.text('CNPJ: 45.191.572/0001-33', 42, y + 13);
+      pdf.text('Tel: (11) 91671-5875', 42, y + 17);
+      pdf.text('refrigeracaofidelis@outlook.com', 42, y + 21);
+      
+      y += 28; // Move o cursor para baixo, após o cabeçalho
+      // --- Fim do cabeçalho ---
+
       pdf.setDrawColor(180,180,180);
       pdf.line(15, y, 195, y);
       y += 8;
@@ -114,7 +121,6 @@ window.addEventListener('DOMContentLoaded', () => {
       y += 8;
       pdf.setFontSize(10);
       pdf.setTextColor(120,120,120);
-      pdf.text('* Campos obrigatórios', 105, y, {align:'center'});
       y += 10;
       // Layout responsivo dos campos
       pdf.setFontSize(12);
@@ -134,18 +140,32 @@ window.addEventListener('DOMContentLoaded', () => {
       addField('Técnico Responsável', tecnico);
       addField('Nome Fantasia (Cliente)', get('nomeFantasia'));
       addField('CNPJ (Cliente)', get('cnpjCliente'));
-      addField('Equipamentos Atendidos', get('equipamento'));
-      addField('Defeito Relatado', get('defeito'));
-      addField('Serviço Realizado', get('servico'));
-      addField('Materiais Utilizados', get('materiais'));
-      addField('Quantidade (Materiais)', get('quantidade'));
-      if (getCheck('exibirValorMaterial')) {
+      
+      // Campos opcionais - só adiciona se tiver valor
+      if (get('equipamento')) {
+        addField('Equipamentos Atendidos', get('equipamento'));
+      }
+      if (get('defeito')) {
+        addField('Defeito Relatado', get('defeito'));
+      }
+      if (get('servico')) {
+        addField('Serviço Realizado', get('servico'));
+      }
+      if (get('materiais')) {
+        addField('Materiais Utilizados', get('materiais'));
+      }
+      if (get('quantidade')) {
+        addField('Quantidade (Materiais)', get('quantidade'));
+      }
+      if (getCheck('exibirValorMaterial') && get('valorTotalMaterial')) {
         addField('Valor Total (Material)', get('valorTotalMaterial'));
       }
-      if (getCheck('exibirValorServico')) {
+      if (getCheck('exibirValorServico') && get('valorServico')) {
         addField('Valor Total do Serviço', get('valorServico'));
       }
-      addField('Garantia Oferecida', get('garantia'));
+      if (get('garantia')) {
+        addField('Garantia Oferecida', get('garantia'));
+      }
       y += 4;
       pdf.setDrawColor(220,220,220);
       pdf.line(15, y, 195, y);
@@ -175,7 +195,7 @@ window.addEventListener('DOMContentLoaded', () => {
       btn.disabled = false;
       btn.textContent = 'Gerar PDF';
       btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-      btn.classList.add('bg-dark-700', 'hover:bg-dark-800');
+      btn.classList.add('bg-dark-700', 'hover:bg-dark-900');
     }
   });
 }); 

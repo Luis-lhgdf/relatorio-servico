@@ -43,8 +43,54 @@ function setupCamposFormatados() {
     });
 }
 
+// Função para limpar o formulário com modal de confirmação
+function setupLimparFormulario() {
+    const btnLimpar = document.getElementById('limparFormulario');
+    const modal = document.getElementById('confirmacaoModal');
+    const btnCancelar = document.getElementById('cancelarLimpeza');
+    const btnConfirmar = document.getElementById('confirmarLimpeza');
+
+    if (!btnLimpar || !modal || !btnCancelar || !btnConfirmar) return;
+
+    const showModal = () => modal.classList.remove('hidden');
+    const hideModal = () => modal.classList.add('hidden');
+
+    btnLimpar.addEventListener('click', showModal);
+    btnCancelar.addEventListener('click', hideModal);
+
+    modal.addEventListener('click', (e) => {
+        if (e.target === modal) {
+            hideModal();
+        }
+    });
+
+    btnConfirmar.addEventListener('click', () => {
+        document.getElementById('relatorioForm').reset();
+        
+        if (window.limparAssinatura) {
+            window.limparAssinatura('tecnico');
+            window.limparAssinatura('cliente');
+        }
+        
+        const tecnicoSelect = document.getElementById('tecnico');
+        const tecnicoOutroInput = document.getElementById('tecnicoOutro');
+        if (tecnicoSelect) tecnicoSelect.value = '';
+        if (tecnicoOutroInput) {
+            tecnicoOutroInput.style.display = 'none';
+            tecnicoOutroInput.value = '';
+        }
+        
+        hideModal();
+        
+        if (typeof showToast === 'function') {
+            showToast('Formulário limpo com sucesso!', true);
+        }
+    });
+}
+
 // Inicializa as funções quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', function() {
     setupTecnicoField();
     setupCamposFormatados();
+    setupLimparFormulario();
 }); 

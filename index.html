@@ -10,9 +10,9 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> -->
 </head>
-<body class="bg-gradient-to-br from-dark-50 to-dark-100 min-h-screen text-dark-800 p-4">
+<body class="bg-gradient-to-br from-dark-50 to-dark-100 min-h-screen text-dark-900 p-4">
   <!-- Cabeçalho Fixo -->
-  <div class="fixed top-0 left-0 right-0 bg-dark-800 p-2 z-50 shadow-lg">
+  <div class="fixed top-0 left-0 right-0 bg-dark-900 p-2 z-50 shadow-lg">
     <div class="max-w-4xl mx-auto flex items-center justify-between">
       <div class="flex items-center gap-2">
         <img src="assets/icon.png" alt="Logo" class="h-10 w-auto" />
@@ -24,7 +24,7 @@
   <!-- Conteúdo Principal -->
   <div class="max-w-4xl mx-auto bg-white/95 backdrop-blur-sm shadow-xl rounded-xl border border-dark-200 p-4 sm:p-6 mt-16">
     <!-- Cabeçalho -->
-    <div class="bg-dark-800 rounded-lg p-3 sm:p-4 mb-4">
+    <div class="bg-dark-900 rounded-lg p-3 sm:p-4 mb-4">
       <div class="flex flex-col sm:flex-row items-center justify-between gap-3 sm:gap-4">
         <div class="flex flex-col sm:flex-row items-center gap-3 sm:gap-4">
           <img src="assets/icon.png" alt="Logo" class="h-12 sm:h-16 w-auto" />
@@ -87,33 +87,33 @@
 
       <!-- Equipamento e Defeito -->
       <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-        <label for="equipamento" class="block text-sm font-medium text-dark-700">Equipamentos Atendidos <span class="text-red-500">*</span></label>
-        <input type="text" id="equipamento" name="Equipamentos" required class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
+        <label for="equipamento" class="block text-sm font-medium text-dark-700">Equipamentos Atendidos</label>
+        <input type="text" id="equipamento" name="Equipamentos" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
       </div>
       <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-        <label for="defeito" class="block text-sm font-medium text-dark-700">Defeito Relatado <span class="text-red-500">*</span></label>
-        <textarea id="defeito" name="Defeito" rows="3" required class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all"></textarea>
+        <label for="defeito" class="block text-sm font-medium text-dark-700">Defeito Relatado</label>
+        <textarea id="defeito" name="Defeito" rows="3" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all"></textarea>
       </div>
 
       <!-- Serviço e Materiais -->
       <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-        <label for="servico" class="block text-sm font-medium text-dark-700">Serviço Realizado <span class="text-red-500">*</span></label>
-        <textarea id="servico" name="Serviço Realizado" rows="3" required class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all"></textarea>
+        <label for="servico" class="block text-sm font-medium text-dark-700">Serviço Realizado</label>
+        <textarea id="servico" name="Serviço Realizado" rows="3" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all"></textarea>
       </div>
 
       <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="materiais" class="block text-sm font-medium text-dark-700">Materiais Utilizados <span class="text-red-500">*</span></label>
-          <textarea id="materiais" name="Materiais" rows="3" required class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all"></textarea>
+          <label for="materiais" class="block text-sm font-medium text-dark-700">Materiais Utilizados</label>
+          <textarea id="materiais" name="Materiais" rows="3" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all"></textarea>
         </div>
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="quantidade" class="block text-sm font-medium text-dark-700">Quantidade (Materiais) <span class="text-red-500">*</span></label>
-          <input type="number" id="quantidade" name="Quantidade" min="0" step="1" required class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
+          <label for="quantidade" class="block text-sm font-medium text-dark-700">Quantidade (Materiais)</label>
+          <input type="number" id="quantidade" name="Quantidade" min="0" step="1" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
         </div>
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="valorTotalMaterial" class="block text-sm font-medium text-dark-700">Valor Total (Material) <span class="text-red-500">*</span></label>
+          <label for="valorTotalMaterial" class="block text-sm font-medium text-dark-700">Valor Total (Material)</label>
           <div class="mt-1 flex items-center gap-2">
-            <input type="text" id="valorTotalMaterial" name="Valor Total Material" required class="w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
+            <input type="text" id="valorTotalMaterial" name="Valor Total Material" class="w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
             <label class="inline-flex items-center">
               <input type="checkbox" id="exibirValorMaterial" name="Exibir Valor Material" class="h-4 w-4 text-dark-600 focus:ring-dark-400" checked>
               <span class="ml-2 text-sm text-dark-700">Exibir na impressão</span>
@@ -125,9 +125,9 @@
       <!-- Valor e Garantia -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="valorServico" class="block text-sm font-medium text-dark-700">Valor Total do Serviço <span class="text-red-500">*</span></label>
+          <label for="valorServico" class="block text-sm font-medium text-dark-700">Valor Total do Serviço</label>
           <div class="mt-1 flex items-center gap-2">
-            <input type="text" id="valorServico" name="Valor Serviço" required class="w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
+            <input type="text" id="valorServico" name="Valor Serviço" class="w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
             <label class="inline-flex items-center">
               <input type="checkbox" id="exibirValorServico" name="Exibir Valor Serviço" class="h-4 w-4 text-dark-600 focus:ring-dark-400" checked>
               <span class="ml-2 text-sm text-dark-700">Exibir na impressão</span>
@@ -135,8 +135,8 @@
           </div>
         </div>
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="garantia" class="block text-sm font-medium text-dark-700">Garantia Oferecida <span class="text-red-500">*</span></label>
-          <input type="text" id="garantia" name="Garantia" required class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
+          <label for="garantia" class="block text-sm font-medium text-dark-700">Garantia Oferecida</label>
+          <input type="text" id="garantia" name="Garantia" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
         </div>
       </div>
 
@@ -145,7 +145,7 @@
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
           <label class="block font-medium text-dark-700 mb-2">Assinatura do Técnico <span class="text-red-500">*</span></label>
           <canvas id="assinaturaTecnico" name="Assinatura Técnico" class="border-2 border-dark-200 w-full h-32 rounded-lg bg-white"></canvas>
-          <button type="button" onclick="limparAssinatura('tecnico')" class="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+          <button type="button" onclick="limparAssinatura('tecnico')" class="mt-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
             Limpar Assinatura
           </button>
         </div>
@@ -153,26 +153,33 @@
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
           <label class="block font-medium text-dark-700 mb-2">Assinatura do Cliente <span class="text-red-500">*</span></label>
           <canvas id="assinaturaCliente" name="Assinatura Cliente" class="border-2 border-dark-200 w-full h-32 rounded-lg bg-white"></canvas>
-          <button type="button" onclick="limparAssinatura('cliente')" class="mt-2 px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors">
+          <button type="button" onclick="limparAssinatura('cliente')" class="mt-2 px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
             Limpar Assinatura
           </button>
         </div>
       </div>
 
       <!-- Botões -->
-      <div class="flex flex-col sm:flex-row gap-4 justify-end mt-6 sm:mt-8">
-        <button type="submit" class="w-full sm:w-auto bg-dark-800 text-white px-6 sm:px-8 py-3 rounded-lg hover:bg-dark-900 transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-          Salvar
-        </button>
-        <button type="button" id="gerarPDF" class="w-full sm:w-auto bg-dark-700 text-white px-6 sm:px-8 py-3 rounded-lg hover:bg-dark-800 transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
-          Gerar PDF
-        </button>
+      <div class="space-y-4 mt-6 sm:mt-8">
+        <div class="flex flex-row gap-4">
+          <button type="button" id="gerarPDF" class="flex-1 bg-dark-700 text-white px-6 sm:px-8 py-3 rounded-lg hover:bg-dark-900 transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+            Gerar PDF
+          </button>
+          <button type="submit" class="flex-1 bg-green-600 text-white px-6 sm:px-8 py-3 rounded-lg hover:bg-green-700 transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+            Salvar
+          </button>
+        </div>
+        <div>
+          <button type="button" id="limparFormulario" class="w-full bg-red-600 text-white px-6 sm:px-8 py-3 rounded-lg hover:bg-red-700 transition-colors shadow-md hover:shadow-lg transform hover:-translate-y-0.5">
+            Limpar Formulário
+          </button>
+        </div>
       </div>
     </form>
   </div>
 
   <!-- Botão flutuante para voltar ao topo -->
-  <button id="btnTopo" title="Voltar ao topo" class="fixed bottom-6 right-6 z-50 bg-dark-800 text-white rounded-full shadow-lg p-3 hover:bg-dark-900 transition-all flex items-center justify-center" style="width:48px; height:48px;">
+  <button id="btnTopo" title="Voltar ao topo" class="fixed bottom-6 right-6 z-50 bg-dark-900 text-white rounded-full shadow-lg p-3 hover:bg-dark-900 transition-all flex items-center justify-center" style="width:48px; height:48px;">
     <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6 mx-auto" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 15l7-7 7 7" /></svg>
   </button>
   <script>
@@ -186,5 +193,23 @@
   <script type="module" src="js/main.js"></script>
   <script type="module" src="js/gerarPDF.js"></script>
   <script src="js/toast-form.js"></script>
+
+  <!-- Modal de Confirmação de Limpeza -->
+  <div id="confirmacaoModal" class="fixed inset-0 bg-gray-900 bg-opacity-75 flex items-center justify-center z-50 hidden">
+    <div class="bg-white rounded-lg shadow-xl p-6 w-full max-w-sm mx-4 transform transition-all">
+      <div class="text-center">
+        <h3 class="text-lg font-bold text-dark-800">Confirmar Limpeza</h3>
+        <p class="mt-2 text-sm text-dark-600">Tem certeza que deseja limpar todo o formulário? Esta ação não pode ser desfeita.</p>
+      </div>
+      <div class="mt-6 flex flex-wrap justify-center gap-4">
+        <button id="cancelarLimpeza" type="button" class="px-6 py-2 bg-gray-200 text-dark-700 rounded-lg hover:bg-gray-300 transition-colors">
+          Cancelar
+        </button>
+        <button id="confirmarLimpeza" type="button" class="px-6 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+          Confirmar
+        </button>
+      </div>
+    </div>
+  </div>
 </body>
 </html>

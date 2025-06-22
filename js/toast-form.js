@@ -22,7 +22,7 @@ window.addEventListener('DOMContentLoaded', () => {
       submitButton.disabled = true;
       submitButton.textContent = 'Enviando...';
       submitButton.classList.add('bg-gray-400', 'cursor-not-allowed');
-      submitButton.classList.remove('bg-dark-800', 'hover:bg-dark-900');
+      submitButton.classList.remove('bg-dark-900', 'hover:bg-dark-900');
     }
     const formData = new FormData(form);
     try {
@@ -38,11 +38,8 @@ window.addEventListener('DOMContentLoaded', () => {
       } catch { /* fallback para texto */ }
       if (isSuccess) {
         showToast('Ordem enviada com sucesso!', true);
-        form.reset();
-        if (window.limparAssinatura) {
-          window.limparAssinatura('tecnico');
-          window.limparAssinatura('cliente');
-        }
+        // Formulário não é mais limpo automaticamente
+        // As assinaturas também não são mais limpas automaticamente
       } else {
         showToast('Erro ao enviar ordem!', false);
       }
@@ -53,7 +50,7 @@ window.addEventListener('DOMContentLoaded', () => {
         submitButton.disabled = false;
         submitButton.textContent = 'Salvar';
         submitButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
-        submitButton.classList.add('bg-dark-800', 'hover:bg-dark-900');
+        submitButton.classList.add('bg-dark-900', 'hover:bg-dark-900');
       }
     }
   });
