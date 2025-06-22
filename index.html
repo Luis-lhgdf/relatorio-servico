@@ -6,21 +6,8 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <title>Relatório de Serviço - Refrigeração Fidelis</title>
   <link rel="stylesheet" href="dist/tailwind.css">
+  <script src="js/preencher-teste.js"></script>
 
-  <style>
-    /* Toggle Switch Styles */
-    #mostrarValores:checked + label .bg-gray-300 {
-      background-color: #10b981; /* green-500 */
-    }
-    
-    #mostrarValores:checked + label .transform {
-      transform: translateX(1.5rem);
-    }
-    
-    #mostrarValores:checked + label .bg-white {
-      background-color: #ffffff;
-    }
-  </style>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
   <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script> -->
@@ -183,14 +170,14 @@
           </div>
           
           <!-- Toggle Switch -->
-          <div class="flex items-center gap-3 w-32">
-            <input type="checkbox" id="mostrarValores" name="mostrarValores" class="sr-only peer" checked>
+          <div class="flex items-center gap-3">
+            <input type="checkbox" id="mostrarValores" name="mostrarValores" class="sr-only" checked>
             <label for="mostrarValores" class="flex items-center cursor-pointer">
-              <div class="relative w-12 h-6 bg-gray-300 rounded-full transition-colors duration-300 ease-in-out peer-checked:bg-green-500">
-                <div class="absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out peer-checked:translate-x-6"></div>
+              <div class="relative w-12 h-6 bg-green-500 rounded-full transition-colors duration-300 ease-in-out" id="switchBg">
+                <div class="absolute left-7 top-1 w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out" id="switchThumb"></div>
               </div>
             </label>
-            <span id="toggleStatus" class="text-sm font-medium text-green-600 text-center flex-1">SIM</span>
+            <span id="toggleStatus" class="text-sm font-medium text-green-600 w-8 text-center">SIM</span>
           </div>
         </div>
       </div>
@@ -226,12 +213,19 @@
     // Toggle Switch Status Update
     document.getElementById('mostrarValores').addEventListener('change', function() {
       const statusElement = document.getElementById('toggleStatus');
+      const switchBg = document.getElementById('switchBg');
+      const switchThumb = document.getElementById('switchThumb');
+      
       if (this.checked) {
         statusElement.textContent = 'SIM';
-        statusElement.className = 'text-sm font-medium text-green-600';
+        statusElement.className = 'text-sm font-medium text-green-600 w-8 text-center';
+        switchBg.className = 'relative w-12 h-6 bg-green-500 rounded-full transition-colors duration-300 ease-in-out';
+        switchThumb.className = 'absolute left-7 top-1 w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out';
       } else {
         statusElement.textContent = 'NÃO';
-        statusElement.className = 'text-sm font-medium text-red-600';
+        statusElement.className = 'text-sm font-medium text-red-600 w-8 text-center';
+        switchBg.className = 'relative w-12 h-6 bg-gray-300 rounded-full transition-colors duration-300 ease-in-out';
+        switchThumb.className = 'absolute left-1 top-1 w-4 h-4 bg-white rounded-full shadow-md transition-transform duration-300 ease-in-out';
       }
     });
   </script>
