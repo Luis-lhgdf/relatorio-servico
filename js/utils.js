@@ -48,4 +48,16 @@ export function formatarValor(valor) {
     minimumFractionDigits: 2,
     maximumFractionDigits: 2
   }).format(numero / 100);
+}
+
+/**
+ * Converte um valor em formato de moeda (R$ 1.234,56) para um número (1234.56)
+ * @param {string} valorFormatado
+ * @returns {number}
+ */
+export function parseValor(valorFormatado) {
+    if (typeof valorFormatado !== 'string' || !valorFormatado) return 0;
+    const numeroLimpo = valorFormatado.replace(/\D/g, '');
+    if (numeroLimpo === '') return 0;
+    return parseFloat(numeroLimpo) / 100;
 } 

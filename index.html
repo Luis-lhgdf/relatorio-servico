@@ -101,43 +101,40 @@
         <textarea id="servico" name="Serviço Realizado" rows="3" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all"></textarea>
       </div>
 
-      <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 sm:gap-6">
-        <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="materiais" class="block text-sm font-medium text-dark-700">Materiais Utilizados</label>
-          <textarea id="materiais" name="Materiais" rows="3" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all"></textarea>
+      <!-- Materiais Dinâmicos -->
+      <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
+        <h3 class="text-lg font-medium text-dark-800 mb-3">Materiais e Peças Utilizadas</h3>
+        <div id="materiaisContainer" class="space-y-4">
+            <!-- Linhas de materiais serão adicionadas aqui via JavaScript -->
         </div>
-        <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="quantidade" class="block text-sm font-medium text-dark-700">Quantidade (Materiais)</label>
-          <input type="number" id="quantidade" name="Quantidade" min="0" step="1" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
+
+        <div class="mt-4 pt-4 border-t border-dark-200 flex justify-end">
+            <div class="w-full sm:w-1/2 md:w-1/3">
+                <label for="valorTotalMateriais" class="block text-sm font-medium text-dark-700">Valor Total dos Materiais</label>
+                <input type="text" id="valorTotalMateriais" name="Valor Total Materiais" readonly class="mt-1 w-full rounded-lg border-dark-200 bg-dark-200 px-3 py-2 font-bold text-dark-800 text-right" placeholder="R$ 0,00" />
+            </div>
         </div>
-        <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="valorTotalMaterial" class="block text-sm font-medium text-dark-700">Valor Total (Material)</label>
-          <div class="mt-1 flex items-center gap-2">
-            <input type="text" id="valorTotalMaterial" name="Valor Total Material" class="w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
-            <label class="inline-flex items-center">
-              <input type="checkbox" id="exibirValorMaterial" name="Exibir Valor Material" class="h-4 w-4 text-dark-600 focus:ring-dark-400" checked>
-              <span class="ml-2 text-sm text-dark-700">Exibir na impressão</span>
-            </label>
-          </div>
-        </div>
+
+        <button type="button" id="adicionarMaterialBtn" class="mt-4 flex items-center gap-2 text-sm font-semibold text-dark-700 hover:text-dark-900 transition-colors">
+            <svg class="w-5 h-5 bg-green-500 text-white rounded-full p-0.5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"></path></svg>
+            Adicionar Material ou Peça
+        </button>
       </div>
 
       <!-- Valor e Garantia -->
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="valorServico" class="block text-sm font-medium text-dark-700">Valor Total do Serviço</label>
-          <div class="mt-1 flex items-center gap-2">
-            <input type="text" id="valorServico" name="Valor Serviço" class="w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
-            <label class="inline-flex items-center">
-              <input type="checkbox" id="exibirValorServico" name="Exibir Valor Serviço" class="h-4 w-4 text-dark-600 focus:ring-dark-400" checked>
-              <span class="ml-2 text-sm text-dark-700">Exibir na impressão</span>
-            </label>
-          </div>
+          <label for="valorMaoDeObra" class="block text-sm font-medium text-dark-700">Valor da Mão de Obra</label>
+          <input type="text" id="valorMaoDeObra" name="Valor Mão de Obra" class="material-valor mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" placeholder="R$ 0,00" />
         </div>
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
-          <label for="garantia" class="block text-sm font-medium text-dark-700">Garantia Oferecida</label>
-          <input type="text" id="garantia" name="Garantia" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
+          <label for="valorServico" class="block text-sm font-medium text-dark-700">Valor Total do Serviço</label>
+          <input type="text" id="valorServico" name="Valor Serviço" readonly class="mt-1 w-full rounded-lg border-dark-200 bg-dark-200 px-3 py-2 font-bold text-dark-800 sm:px-4 sm:py-2 sm:text-base" placeholder="Calculando..." />
         </div>
+      </div>
+      <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
+        <label for="garantia" class="block text-sm font-medium text-dark-700">Garantia Oferecida</label>
+        <input type="text" id="garantia" name="Garantia" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
       </div>
 
       <!-- Assinaturas -->

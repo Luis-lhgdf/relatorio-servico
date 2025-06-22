@@ -16,15 +16,40 @@ window.addEventListener('DOMContentLoaded', () => {
   const submitButton = form.querySelector('button[type="submit"]');
   const originalBg = submitButton ? submitButton.style.backgroundColor : '';
   const originalCursor = submitButton ? submitButton.style.cursor : '';
+
   form.addEventListener('submit', async function(e) {
     e.preventDefault();
     if (submitButton) {
       submitButton.disabled = true;
       submitButton.textContent = 'Enviando...';
       submitButton.classList.add('bg-gray-400', 'cursor-not-allowed');
-      submitButton.classList.remove('bg-dark-900', 'hover:bg-dark-900');
+      submitButton.classList.remove('bg-green-600', 'hover:bg-green-700');
     }
+
+    // --- Serialização dos Materiais Dinâmicos ---
+    const materiaisArray = [];
+    document.querySelectorAll('.material-row').forEach(row => {
+        const descricao = row.querySelector('input[name^="MaterialDescricao"]').value;
+        const qtd = row.querySelector('input[name^="MaterialQtd"]').value;
+        const subtotal = row.querySelector('input[name^="MaterialSubtotal"]').value;
+        
+        if (descricao) { // Só adiciona se houver descrição
+            materiaisArray.push(`${qtd}x ${descricao} (${subtotal})`);
+        }
+    });
+
+    const materiaisTexto = materiaisArray.join('\n'); // CORREÇÃO: Usa '\n' para quebra de linha real
+
+    // Cria um input oculto para enviar os dados consolidados
+    const hiddenInput = document.createElement('input');
+    hiddenInput.type = 'hidden';
+    hiddenInput.name = 'Materiais';
+    hiddenInput.value = materiaisTexto;
+    form.appendChild(hiddenInput);
+    // --- Fim da Serialização ---
+
     const formData = new FormData(form);
+    
     try {
       const response = await fetch(form.action, {
         method: 'POST',
@@ -46,11 +71,12 @@ window.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       showToast('Erro ao enviar ordem!', false);
     } finally {
+      form.removeChild(hiddenInput); // Limpa o input oculto após o envio
       if (submitButton) {
         submitButton.disabled = false;
         submitButton.textContent = 'Salvar';
         submitButton.classList.remove('bg-gray-400', 'cursor-not-allowed');
-        submitButton.classList.add('bg-dark-900', 'hover:bg-dark-900');
+        submitButton.classList.add('bg-green-600', 'hover:bg-green-700');
       }
     }
   });
