@@ -86,6 +86,9 @@ window.addEventListener('DOMContentLoaded', () => {
                 return null;
             };
 
+            // Verifica se deve mostrar valores no PDF
+            const mostrarValores = document.getElementById('mostrarValores')?.checked ?? true;
+
             let tecnico = get('tecnico');
             if (tecnico === 'outro') {
                 tecnico = get('tecnicoOutro');
@@ -160,7 +163,14 @@ window.addEventListener('DOMContentLoaded', () => {
                 pdf.setTextColor(labelColor[0], labelColor[1], labelColor[2]);
                 pdf.text(label + ':', xPos, currentY);
                 pdf.setTextColor(valueColor[0], valueColor[1], valueColor[2]);
-                pdf.text(String(value), xPos + pdf.getStringUnitWidth(label + ':') * pdf.getFontSize() / pdf.internal.scaleFactor + 2, currentY);
+                
+                // Verifica se é um valor monetário e se deve ser ocultado
+                const isValorMonetario = label.toLowerCase().includes('valor') || 
+                                       value.toString().includes('R$') || 
+                                       value.toString().includes(',') && value.toString().match(/\d+,\d{2}/);
+                
+                const valorExibir = (isValorMonetario && !mostrarValores) ? '---' : String(value);
+                pdf.text(valorExibir, xPos + pdf.getStringUnitWidth(label + ':') * pdf.getFontSize() / pdf.internal.scaleFactor + 2, currentY);
             };
 
             const addMultilineField = (title, value, startX, startY, maxWidth) => {
@@ -207,7 +217,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
             y = boxY + clientBoxHeight + 5; // Atualiza y para a próxima seção
 
-            // Seção Única para Equipamentos Atendidos, Defeitos Relatados e Laudo Técnico
+            // Seção Única para Equipamentos Atendidos, Defeitos Relatados e Serviço Realizado
             boxY = y;
             const equipamento = get('equipamento');
             const defeito = get('defeito');
@@ -228,12 +238,12 @@ window.addEventListener('DOMContentLoaded', () => {
             pdf.line(pageMarginX + 5, currentSectionContentY - 2, pageMarginX + contentWidth - 5, currentSectionContentY - 2); // Linha divisória
             currentSectionContentY += 5;
 
-            tempHeight = addMultilineField('Laudo Técnico', servico, pageMarginX + 5, currentSectionContentY, contentWidth - 10);
-            combinedContentHeight += tempHeight + 5; // Adiciona altura da seção de laudo + espaço
+            tempHeight = addMultilineField('Serviço Realizado', servico, pageMarginX + 5, currentSectionContentY, contentWidth - 10);
+            combinedContentHeight += tempHeight + 5; // Adiciona altura da seção de Serviço Realizado + espaço
             // currentSectionContentY += tempHeight; (Não precisa atualizar, pois é o último item)
 
             // Desenha a caixa para a seção combinada
-            y = drawSectionBox('Equipamentos, Defeitos e Laudo', boxY, combinedContentHeight + (2 * boxPadding) + 7); // +7 para o título e linha
+            y = drawSectionBox('Equipamentos, Defeitos e Serviço Realizado', boxY, combinedContentHeight + (2 * boxPadding) + 7); // +7 para o título e linha
             // Reposiciona o Y para os textos dentro da caixa após desenhar ela
             currentSectionContentY = boxY + 10 + boxPadding;
 
@@ -248,7 +258,7 @@ window.addEventListener('DOMContentLoaded', () => {
             pdf.line(pageMarginX + 5, currentSectionContentY - 2, pageMarginX + contentWidth - 5, currentSectionContentY - 2); // Linha divisória
             currentSectionContentY += 5;
 
-            addMultilineField('Laudo Técnico', servico, pageMarginX + 5, currentSectionContentY, contentWidth - 10);
+            addMultilineField('Serviço Realizado', servico, pageMarginX + 5, currentSectionContentY, contentWidth - 10);
 
             y = boxY + combinedContentHeight + (2 * boxPadding) + 7 + 5; // Atualiza y para a próxima seção
             // --- Fim das Seções de Dados com Caixas ---
@@ -264,7 +274,7 @@ window.addEventListener('DOMContentLoaded', () => {
             y += 5;
             pdf.setFontSize(12);
             pdf.setTextColor(sectionTitleColor[0], sectionTitleColor[1], sectionTitleColor[2]);
-            pdf.text('Serviços Prestados', pageMarginX, y); // Título da seção da tabela
+            pdf.text('Materiais e Peças Utilizadas', pageMarginX, y); // Título da seção da tabela
             y += 8;
 
             const tableCols = {
@@ -280,8 +290,13 @@ window.addEventListener('DOMContentLoaded', () => {
                 pdfInstance.setTextColor(80, 80, 80);
                 pdfInstance.text('Descrição', tableCols.descricao.x, currentY);
                 pdfInstance.text('Quant.', tableCols.quantidade.x, currentY, { align: tableCols.quantidade.align });
-                pdfInstance.text('Vlr. Unit.', tableCols.valorUnitario.x, currentY, { align: tableCols.valorUnitario.align });
-                pdfInstance.text('Subtotal', tableCols.valorTotal.x, currentY, { align: tableCols.valorTotal.align });
+                
+                // Condiciona a exibição dos cabeçalhos de valores
+                if (mostrarValores) {
+                    pdfInstance.text('Vlr. Unit.', tableCols.valorUnitario.x, currentY, { align: tableCols.valorUnitario.align });
+                    pdfInstance.text('Subtotal', tableCols.valorTotal.x, currentY, { align: tableCols.valorTotal.align });
+                }
+                
                 pdfInstance.setFont(undefined, 'normal');
                 currentY += 2;
                 pdfInstance.setDrawColor(180, 180, 180);
@@ -315,8 +330,13 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 pdf.text(descriptionLines, tableCols.descricao.x, y);
                 pdf.text(qtd, tableCols.quantidade.x, y, { align: tableCols.quantidade.align });
-                pdf.text(valorUnit, tableCols.valorUnitario.x, y, { align: tableCols.valorUnitario.align });
-                pdf.text(subtotal, tableCols.valorTotal.x, y, { align: tableCols.valorTotal.align });
+                
+                // Condiciona a exibição dos valores monetários
+                if (mostrarValores) {
+                    pdf.text(valorUnit, tableCols.valorUnitario.x, y, { align: tableCols.valorUnitario.align });
+                    pdf.text(subtotal, tableCols.valorTotal.x, y, { align: tableCols.valorTotal.align });
+                }
+                
                 y += lineHeight + 2; // Adiciona um padding entre as linhas
             });
             // --- Fim da Tabela de Materiais ---
@@ -344,16 +364,18 @@ window.addEventListener('DOMContentLoaded', () => {
             pdf.text('Valor Total Materiais:', currentX, y);
             currentX += pdf.getStringUnitWidth('Valor Total Materiais:') * pdf.getFontSize() / pdf.internal.scaleFactor + 2;
             pdf.setTextColor(valueColor[0], valueColor[1], valueColor[2]);
-            pdf.text(get('valorTotalMateriais'), currentX, y);
-            currentX += pdf.getStringUnitWidth(get('valorTotalMateriais')) * pdf.getFontSize() / pdf.internal.scaleFactor + itemSpacing;
+            const valorTotalMateriais = mostrarValores ? get('valorTotalMateriais') : '---';
+            pdf.text(valorTotalMateriais, currentX, y);
+            currentX += pdf.getStringUnitWidth(valorTotalMateriais) * pdf.getFontSize() / pdf.internal.scaleFactor + itemSpacing;
 
             // Valor da Mão de Obra
             pdf.setTextColor(labelColor[0], labelColor[1], labelColor[2]);
             pdf.text('Valor da Mão de Obra:', currentX, y);
             currentX += pdf.getStringUnitWidth('Valor da Mão de Obra:') * pdf.getFontSize() / pdf.internal.scaleFactor + 2;
             pdf.setTextColor(valueColor[0], valueColor[1], valueColor[2]);
-            pdf.text(get('valorMaoDeObra'), currentX, y);
-            currentX += pdf.getStringUnitWidth(get('valorMaoDeObra')) * pdf.getFontSize() / pdf.internal.scaleFactor + itemSpacing * 2; // Maior espaço antes do total geral
+            const valorMaoDeObra = mostrarValores ? get('valorMaoDeObra') : '---';
+            pdf.text(valorMaoDeObra, currentX, y);
+            currentX += pdf.getStringUnitWidth(valorMaoDeObra) * pdf.getFontSize() / pdf.internal.scaleFactor + itemSpacing * 2; // Maior espaço antes do total geral
 
             // TOTAL GERAL
             pdf.setFontSize(11);
@@ -362,7 +384,8 @@ window.addEventListener('DOMContentLoaded', () => {
             pdf.text('TOTAL GERAL:', currentX, y);
             currentX += pdf.getStringUnitWidth('TOTAL GERAL:') * pdf.getFontSize() / pdf.internal.scaleFactor + 2;
             pdf.setTextColor(valueColor[0], valueColor[1], valueColor[2]);
-            pdf.text(get('valorServico'), currentX, y);
+            const valorServico = mostrarValores ? get('valorServico') : '---';
+            pdf.text(valorServico, currentX, y);
             pdf.setFont(undefined, 'normal');
             pdf.setFontSize(10); // Volta ao tamanho da fonte padrão
 
