@@ -92,44 +92,52 @@ window.addEventListener('DOMContentLoaded', () => {
             }
 
             const pdf = new window.jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-            let y = 10; // Posição Y inicial reduzida para 10mm (era 15)
-            const pageMarginX = 10; // Margem lateral reduzida para 10mm (era 15)
-            const contentWidth = 210 - (2 * pageMarginX); // Largura total da página - margens
-
+            
             // --- Cabeçalho ---
-            const headerHeight = 28;
-            pdf.setFillColor(0, 0, 0); // Fundo escuro (preto)
-            pdf.roundedRect(pageMarginX, y, contentWidth, headerHeight, 3, 3, 'F'); // Cabeçalho com bordas arredondadas
+            const pageMarginX = 5;
+            const contentWidth = 210 - (2 * pageMarginX);
+            let y = 10;
+            const headerBoxY = y;
+            const headerHeight = 30;
 
-            y += 4; // Padding interno
+            pdf.setFillColor(0, 0, 0); // Fundo escuro (preto)
+            pdf.roundedRect(pageMarginX, headerBoxY, contentWidth, headerHeight, 3, 3, 'F');
 
             try {
                 const img = new Image();
                 img.src = 'assets/icon.png';
                 await new Promise(res => { img.onload = res; });
-                pdf.addImage(img, 'PNG', pageMarginX + 5, y, 18, 18); // Logo mais à esquerda
+                // Logo ligeiramente ajustado para centralização vertical perfeita
+                pdf.addImage(img, 'PNG', pageMarginX + 5, headerBoxY + 6, 18, 18);
             } catch (e) {
                 console.warn('Logo image could not be loaded:', e);
             }
-
-            pdf.setTextColor(255, 255, 255); // Cor do texto: Branco
+ 
+            const textX = pageMarginX + 28;
+ 
+            pdf.setTextColor(255, 255, 255); // Branco
             pdf.setFontSize(18);
-            pdf.text('Refrigeração Fidelis', pageMarginX + 28, y + 8); // Ajuste a posição do nome da empresa
-
-            pdf.setTextColor(203, 213, 225); // Cor do texto: Cinza claro (gray-300)
+            pdf.setFont(undefined, 'bold');
+            pdf.text('Refrigeração Fidelis', textX, headerBoxY + 11);
+ 
+            pdf.setFont(undefined, 'normal');
+            pdf.setTextColor(203, 213, 225); // Cinza claro (gray-300)
             pdf.setFontSize(10);
-            pdf.text('Everaldo Fidelis', pageMarginX + contentWidth - 5, y + 2, { align: 'right' });
-            pdf.text('CNPJ: 45.191.572/0001-33', pageMarginX + contentWidth - 5, y + 7, { align: 'right' });
-            pdf.text('(11) 91671-5875 / refrigeracaofidelis@outlook.com', pageMarginX + contentWidth - 5, y + 12, { align: 'right' });
-
-            y += headerHeight; // Move o cursor para baixo após o cabeçalho
+            // Posição Y e espaçamento entre linhas ajustados para melhor distribuição
+            const infoY = headerBoxY + 17;
+            const lineHeight = 4.5;
+            pdf.text('CNPJ: 45.191.572/0001-33', textX, infoY);
+            pdf.text('Tel: (11) 91671-5875', textX, infoY + lineHeight);
+            pdf.text('refrigeracaofidelis@outlook.com', textX, infoY + (2 * lineHeight));
+ 
+            y = headerBoxY + headerHeight; // Move o cursor para baixo após o cabeçalho
             // --- Fim do Cabeçalho ---
-
-            y += 4;
+ 
+            y += 6;
             pdf.setFontSize(12);
             pdf.setTextColor(30, 30, 30);
             pdf.text('ORDEM DE SERVIÇO', 105, y, { align: 'center' });
-            y += 6;
+            y += 3;
 
             // --- Seções de Dados com Caixas e Colunas ---
             const boxPadding = 3;
@@ -348,7 +356,7 @@ window.addEventListener('DOMContentLoaded', () => {
             currentX += pdf.getStringUnitWidth(get('valorMaoDeObra')) * pdf.getFontSize() / pdf.internal.scaleFactor + itemSpacing * 2; // Maior espaço antes do total geral
 
             // TOTAL GERAL
-            pdf.setFontSize(12);
+            pdf.setFontSize(11);
             pdf.setTextColor(sectionTitleColor[0], sectionTitleColor[1], sectionTitleColor[2]);
             pdf.setFont(undefined, 'bold');
             pdf.text('TOTAL GERAL:', currentX, y);

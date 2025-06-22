@@ -46,6 +46,19 @@ window.addEventListener('DOMContentLoaded', () => {
     hiddenInput.name = 'Materiais';
     hiddenInput.value = materiaisTexto;
     form.appendChild(hiddenInput);
+
+    // --- Mapeamento para "Valor Total do Serviço" ---
+    const valorServicoInput = document.getElementById('valorServico');
+    const valorServicoOriginalName = valorServicoInput.name;
+    const valorTotalServicoHiddenInput = document.createElement('input');
+    
+    valorTotalServicoHiddenInput.type = 'hidden';
+    valorTotalServicoHiddenInput.name = 'Valor Total do Serviço';
+    valorTotalServicoHiddenInput.value = valorServicoInput.value;
+    form.appendChild(valorTotalServicoHiddenInput);
+    
+    // Remove o name do input original para não ser enviado com o nome antigo
+    valorServicoInput.name = '';
     // --- Fim da Serialização ---
 
     const formData = new FormData(form);
@@ -71,7 +84,10 @@ window.addEventListener('DOMContentLoaded', () => {
     } catch (err) {
       showToast('Erro ao enviar ordem!', false);
     } finally {
-      form.removeChild(hiddenInput); // Limpa o input oculto após o envio
+      form.removeChild(hiddenInput); // Limpa o input oculto de materiais
+      form.removeChild(valorTotalServicoHiddenInput); // Limpa o input oculto do valor total
+      valorServicoInput.name = valorServicoOriginalName; // Restaura o name original
+      
       if (submitButton) {
         submitButton.disabled = false;
         submitButton.textContent = 'Salvar';
