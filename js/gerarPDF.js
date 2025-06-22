@@ -92,8 +92,8 @@ window.addEventListener('DOMContentLoaded', () => {
             }
 
             const pdf = new window.jspdf.jsPDF({ orientation: 'portrait', unit: 'mm', format: 'a4' });
-            let y = 15; // Posição Y inicial
-            const pageMarginX = 15; // Margem lateral esquerda e direita
+            let y = 10; // Posição Y inicial reduzida para 10mm (era 15)
+            const pageMarginX = 10; // Margem lateral reduzida para 10mm (era 15)
             const contentWidth = 210 - (2 * pageMarginX); // Largura total da página - margens
 
             // --- Cabeçalho ---
@@ -125,11 +125,11 @@ window.addEventListener('DOMContentLoaded', () => {
             y += headerHeight; // Move o cursor para baixo após o cabeçalho
             // --- Fim do Cabeçalho ---
 
-            y += 8;
-            pdf.setFontSize(15);
+            y += 4;
+            pdf.setFontSize(12);
             pdf.setTextColor(30, 30, 30);
             pdf.text('ORDEM DE SERVIÇO', 105, y, { align: 'center' });
-            y += 10;
+            y += 6;
 
             // --- Seções de Dados com Caixas e Colunas ---
             const boxPadding = 3;
@@ -366,7 +366,7 @@ window.addEventListener('DOMContentLoaded', () => {
                 pdf.text('Garantia Oferecida:', pageMarginX, y);
                 pdf.setTextColor(valueColor[0], valueColor[1], valueColor[2]);
                 pdf.text(get('garantia'), pageMarginX + 35, y);
-                y += 8;
+                y += 1; // Espaço para a próxima linha
             }
 
             // --- Assinaturas ---
@@ -413,7 +413,7 @@ window.addEventListener('DOMContentLoaded', () => {
             pdf.setFont(undefined, 'normal');
             pdf.setFontSize(9);
             pdf.setTextColor(160, 160, 160);
-            pdf.text('Gerado automaticamente pelo sistema Refrigeração Fidelis', 105, 290, { align: 'center' }); // Rodapé
+            pdf.text('Gerado automaticamente pelo sistema Refrigeração Fidelis', 105, 295, { align: 'center' }); // Rodapé ajustado para mais próximo do fim da página
 
             pdf.save('ordem-de-servico.pdf');
 
