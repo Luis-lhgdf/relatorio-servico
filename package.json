@@ -1,0 +1,12 @@
+{
+  "name": "relatorio-servico",
+  "version": "1.0.0",
+  "description": "Sistema de Relatório de Serviço - Refrigeração Fidelis",
+  "scripts": {
+    "build": "tailwindcss -i ./src/input.css -o ./dist/tailwind.css --minify",
+    "watch": "tailwindcss -i ./src/input.css -o ./dist/tailwind.css --watch"
+  },
+  "devDependencies": {
+    "tailwindcss": "^3.4.1"
+  }
+} 
