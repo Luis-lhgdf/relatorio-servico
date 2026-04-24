@@ -441,10 +441,63 @@ window.addEventListener('DOMContentLoaded', () => {
 
             y += signatureBoxHeight + signaturePadding + 5; // Move Y para baixo após as assinaturas
 
+            // --- Fotos do Serviço ---
+            const fotos = window.imagensServico || [];
+            if (fotos.length > 0) {
+                pdf.addPage();
+                let fy = 15;
+                pdf.setFontSize(12);
+                pdf.setFont(undefined, 'bold');
+                pdf.setTextColor(sectionTitleColor[0], sectionTitleColor[1], sectionTitleColor[2]);
+                pdf.text('Fotos do Serviço', 105, fy, { align: 'center' });
+                pdf.setFont(undefined, 'normal');
+                fy += 10;
+
+                const fotoGap = 5;
+                const fotoCols = 2;
+                const fotoWidth = (contentWidth - fotoGap) / fotoCols;
+                const fotoHeight = fotoWidth * 0.75;
+
+                for (let i = 0; i < fotos.length; i++) {
+                    const col = i % fotoCols;
+                    if (col === 0 && i > 0) fy += fotoHeight + fotoGap;
+                    if (fy + fotoHeight > 282) {
+                        pdf.addPage();
+                        fy = 15;
+                    }
+                    const fx = pageMarginX + col * (fotoWidth + fotoGap);
+                    try {
+                        const dataUrl = fotos[i].dataUrl;
+
+                        // Carrega a imagem para obter as dimensões reais e manter proporção
+                        const tmpImg = new Image();
+                        await new Promise(res => { tmpImg.onload = res; tmpImg.src = dataUrl; });
+                        const ratio = tmpImg.naturalWidth / tmpImg.naturalHeight;
+                        const boxRatio = fotoWidth / fotoHeight;
+                        let iw, ih, ix, iy;
+                        if (ratio >= boxRatio) {
+                            iw = fotoWidth; ih = iw / ratio;
+                            ix = fx; iy = fy + (fotoHeight - ih) / 2;
+                        } else {
+                            ih = fotoHeight; iw = ih * ratio;
+                            ix = fx + (fotoWidth - iw) / 2; iy = fy;
+                        }
+
+                        pdf.setFillColor(245, 245, 245);
+                        pdf.rect(fx, fy, fotoWidth, fotoHeight, 'F');
+                        pdf.addImage(dataUrl, 'JPEG', ix, iy, iw, ih);
+                        pdf.setDrawColor(200, 200, 200);
+                        pdf.rect(fx, fy, fotoWidth, fotoHeight, 'S');
+                    } catch (e) {
+                        console.warn('Erro ao adicionar foto:', e);
+                    }
+                }
+            }
+
             pdf.setFont(undefined, 'normal');
             pdf.setFontSize(9);
             pdf.setTextColor(160, 160, 160);
-            pdf.text('Gerado automaticamente pelo sistema Refrigeração Fidelis', 105, 295, { align: 'center' }); // Rodapé ajustado para mais próximo do fim da página
+            pdf.text('Gerado automaticamente pelo sistema Refrigeração Fidelis', 105, 295, { align: 'center' });
 
             pdf.save('ordem-de-servico.pdf');
 

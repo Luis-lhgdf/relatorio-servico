@@ -84,7 +84,10 @@ function setupLimparFormulario() {
         
         document.getElementById('materiaisContainer').innerHTML = '';
         criarLinhaDeMaterial();
-        
+
+        window.imagensServico = [];
+        document.getElementById('previewFotos').innerHTML = '';
+
         hideModal();
         
         if (typeof showToast === 'function') {
