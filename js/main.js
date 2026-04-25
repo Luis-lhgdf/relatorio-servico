@@ -1,4 +1,4 @@
-import { formatarDataBR, formatarCNPJ, formatarValor, parseValor } from './utils.js';
+import { formatarDataBR, formatarCNPJ, formatarCPF, formatarValor, parseValor } from './utils.js';
 
 // Função para controlar a exibição do campo de técnico
 function setupTecnicoField() {
@@ -27,7 +27,6 @@ function setupTecnicoField() {
 
 // Função para configurar os campos formatados
 function setupCamposFormatados() {
-    // Configuração do CNPJ
     const cnpjInput = document.getElementById('cnpjCliente');
     if (cnpjInput) {
         cnpjInput.addEventListener('input', function(e) {
@@ -35,7 +34,13 @@ function setupCamposFormatados() {
         });
     }
 
-    // Configuração do campo de mão de obra
+    const cpfInput = document.getElementById('cpfCliente');
+    if (cpfInput) {
+        cpfInput.addEventListener('input', function(e) {
+            e.target.value = formatarCPF(e.target.value);
+        });
+    }
+
     const campoMaoDeObra = document.getElementById('valorMaoDeObra');
     if (campoMaoDeObra) {
         campoMaoDeObra.addEventListener('input', (e) => {
@@ -43,6 +48,33 @@ function setupCamposFormatados() {
             calcularValorTotal();
         });
     }
+}
+
+// Alterna campos PF / PJ
+function setupTipoPessoa() {
+    const tipoPJ = document.getElementById('tipoPJ');
+    const tipoPF = document.getElementById('tipoPF');
+    const campoCNPJ = document.getElementById('campoCNPJ');
+    const campoCPF = document.getElementById('campoCPF');
+    const labelNome = document.getElementById('labelNomeCliente');
+
+    if (!tipoPJ || !tipoPF) return;
+
+    function atualizar() {
+        if (tipoPF.checked) {
+            campoCNPJ.classList.add('hidden');
+            campoCPF.classList.remove('hidden');
+            labelNome.innerHTML = 'Nome do Cliente <span class="text-red-500">*</span>';
+        } else {
+            campoCNPJ.classList.remove('hidden');
+            campoCPF.classList.add('hidden');
+            labelNome.innerHTML = 'Nome Fantasia (Cliente) <span class="text-red-500">*</span>';
+        }
+    }
+
+    tipoPJ.addEventListener('change', atualizar);
+    tipoPF.addEventListener('change', atualizar);
+    atualizar();
 }
 
 // Função para limpar o formulário com modal de confirmação
@@ -82,6 +114,9 @@ function setupLimparFormulario() {
             tecnicoOutroInput.value = '';
         }
         
+        document.getElementById('equipamentosContainer').innerHTML = '';
+        criarLinhaDeEquipamento();
+
         document.getElementById('materiaisContainer').innerHTML = '';
         criarLinhaDeMaterial();
 
@@ -181,14 +216,56 @@ function setupMateriaisDinamicos() {
     if (btnAdicionar) {
         btnAdicionar.addEventListener('click', criarLinhaDeMaterial);
     }
-    // Adiciona uma linha inicial por padrão
     criarLinhaDeMaterial();
 }
+
+// --- Equipamentos Dinâmicos ---
+
+function criarLinhaDeEquipamento() {
+    const container = document.getElementById('equipamentosContainer');
+    const index = container.children.length;
+    const div = document.createElement('div');
+    div.className = 'equipamento-row grid grid-cols-1 sm:grid-cols-12 gap-3 p-3 bg-gray-100 rounded-lg';
+
+    div.innerHTML = `
+        <div class="sm:col-span-7">
+            <label class="text-xs font-medium text-dark-600">Equipamento</label>
+            <input type="text" class="equip-nome mt-1 w-full border-dark-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-dark-400" placeholder="Ex: Compressor, Condensador...">
+        </div>
+        <div class="sm:col-span-4">
+            <label class="text-xs font-medium text-dark-600">ID / Nº de Série</label>
+            <input type="text" class="equip-id mt-1 w-full border-dark-200 rounded-lg px-3 py-2 text-sm focus:ring-2 focus:ring-dark-400" placeholder="Ex: EQ-001">
+        </div>
+        <div class="sm:col-span-1 flex items-end">
+            <button type="button" class="remover-equipamento-btn w-full h-10 flex items-center justify-center bg-red-600 text-white rounded-lg hover:bg-red-700 transition-colors">
+                <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 7l-.867 12.142A2 2 0 0116.138 21H7.862a2 2 0 01-1.995-1.858L5 7m5 4v6m4-6v6m1-10V4a1 1 0 00-1-1h-4a1 1 0 00-1 1v3M4 7h16"></path></svg>
+            </button>
+        </div>
+    `;
+
+    container.appendChild(div);
+
+    div.querySelector('.remover-equipamento-btn').addEventListener('click', () => {
+        div.remove();
+    });
+}
+
+function setupEquipamentosDinamicos() {
+    const btn = document.getElementById('adicionarEquipamentoBtn');
+    if (btn) btn.addEventListener('click', criarLinhaDeEquipamento);
+    criarLinhaDeEquipamento();
+}
+
+// Expõe para uso externo (preencher-teste.js)
+window.criarLinhaDeEquipamento = criarLinhaDeEquipamento;
+window.criarLinhaDeMaterial = criarLinhaDeMaterial;
 
 // Inicializa as funções quando o DOM estiver carregado
 document.addEventListener('DOMContentLoaded', function() {
     setupTecnicoField();
+    setupTipoPessoa();
     setupCamposFormatados();
+    setupEquipamentosDinamicos();
     setupMateriaisDinamicos();
     setupLimparFormulario();
 }); 

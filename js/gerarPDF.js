@@ -12,15 +12,37 @@ window.addEventListener('DOMContentLoaded', () => {
         btn.classList.remove('bg-dark-700', 'hover:bg-dark-900');
 
         try {
+            // Restaura botão e encerra validação com destaque no campo
+            const falharValidacao = (el, mensagem) => {
+                showToast(mensagem, false);
+                btn.disabled = false;
+                btn.textContent = 'Gerar PDF';
+                btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
+                btn.classList.add('bg-dark-700', 'hover:bg-dark-900');
+
+                if (el) {
+                    el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                    el.classList.add('ring-2', 'ring-red-500', 'border-red-500');
+                    el.addEventListener('input', function limpar() {
+                        el.classList.remove('ring-2', 'ring-red-500', 'border-red-500');
+                        el.removeEventListener('input', limpar);
+                        el.removeEventListener('change', limpar);
+                    });
+                    el.addEventListener('change', function limpar() {
+                        el.classList.remove('ring-2', 'ring-red-500', 'border-red-500');
+                        el.removeEventListener('input', limpar);
+                        el.removeEventListener('change', limpar);
+                    });
+                }
+            };
+
             // Validação dos campos obrigatórios
             const obrigatorios = [
                 { id: 'dataServico', nome: 'Data do Serviço' },
                 { id: 'status', nome: 'Status' },
-                { id: 'nomeFantasia', nome: 'Nome Fantasia (Cliente)' },
-                { id: 'cnpjCliente', nome: 'CNPJ (Cliente)' }
+                { id: 'nomeFantasia', nome: 'Nome Fantasia (Cliente)' }
             ];
 
-            // Se técnico for outro, validar o campo de texto, senão o select
             if (document.getElementById('tecnico').value === 'outro') {
                 obrigatorios.push({ id: 'tecnicoOutro', nome: 'Técnico Responsável' });
             } else {
@@ -30,15 +52,7 @@ window.addEventListener('DOMContentLoaded', () => {
             for (const campo of obrigatorios) {
                 const el = document.getElementById(campo.id);
                 if (!el || !el.value.trim()) {
-                    if (typeof showToast === 'function') {
-                        showToast(`Preencha o campo obrigatório: ${campo.nome}`, false);
-                    } else {
-                        alert(`Preencha o campo obrigatório: ${campo.nome}`);
-                    }
-                    btn.disabled = false;
-                    btn.textContent = 'Gerar PDF';
-                    btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-                    btn.classList.add('bg-dark-700', 'hover:bg-dark-900');
+                    falharValidacao(el, `Preencha o campo obrigatório: ${campo.nome}`);
                     return;
                 }
             }
@@ -54,36 +68,27 @@ window.addEventListener('DOMContentLoaded', () => {
             }
 
             if (isCanvasVazio(assinaturaTecnico)) {
-                if (typeof showToast === 'function') {
-                    showToast('A assinatura do Técnico é obrigatória!', false);
-                } else {
-                    alert('A assinatura do Técnico é obrigatória!');
-                }
-                btn.disabled = false;
-                btn.textContent = 'Gerar PDF';
-                btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-                btn.classList.add('bg-dark-700', 'hover:bg-dark-900');
+                falharValidacao(assinaturaTecnico, 'A assinatura do Técnico é obrigatória!');
                 return;
             }
 
             if (isCanvasVazio(assinaturaCliente)) {
-                if (typeof showToast === 'function') {
-                    showToast('A assinatura do Cliente é obrigatória!', false);
-                } else {
-                    alert('A assinatura do Cliente é obrigatória!');
-                }
-                btn.disabled = false;
-                btn.textContent = 'Gerar PDF';
-                btn.classList.remove('bg-gray-400', 'cursor-not-allowed');
-                btn.classList.add('bg-dark-700', 'hover:bg-dark-900');
+                falharValidacao(assinaturaCliente, 'A assinatura do Cliente é obrigatória!');
                 return;
             }
 
             const get = id => document.getElementById(id)?.value || '';
             const obterAssinaturaBase64 = tipo => {
-                if (tipo === 'tecnico') return assinaturaTecnico ? assinaturaTecnico.toDataURL('image/png') : null;
-                if (tipo === 'cliente') return assinaturaCliente ? assinaturaCliente.toDataURL('image/png') : null;
-                return null;
+                const canvas = tipo === 'tecnico' ? assinaturaTecnico : tipo === 'cliente' ? assinaturaCliente : null;
+                if (!canvas) return null;
+                const tmp = document.createElement('canvas');
+                tmp.width = canvas.width;
+                tmp.height = canvas.height;
+                const ctx = tmp.getContext('2d');
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, tmp.width, tmp.height);
+                ctx.drawImage(canvas, 0, 0);
+                return tmp.toDataURL('image/jpeg', 0.95);
             };
 
             // Verifica se deve mostrar valores no PDF
@@ -206,61 +211,101 @@ window.addEventListener('DOMContentLoaded', () => {
 
 
             // Dados do Cliente (2 colunas)
+            const tipoPF = document.getElementById('tipoPF')?.checked;
+            const docLabel = tipoPF ? 'CPF' : 'CNPJ';
+            const docValor = tipoPF ? get('cpfCliente') : get('cnpjCliente');
+            const nomeLabel = tipoPF ? 'Nome' : 'Nome Fantasia';
+
             boxY = y;
-            // Altura estimada: 2 campos em 1 linha (nome/cnpj) = 1 linha
             const clientBoxHeight = 1 * fieldLineHeight + (2 * boxPadding) + 7;
             y = drawSectionBox('Dados do Cliente', boxY, clientBoxHeight);
 
-            addField('Nome Fantasia', get('nomeFantasia'), col1X, y);
-            addField('CNPJ', get('cnpjCliente'), col2X, y);
+            addField(nomeLabel, get('nomeFantasia'), col1X, y);
+            addField(docLabel, docValor, col2X, y);
             y += fieldLineHeight;
 
-            y = boxY + clientBoxHeight + 5; // Atualiza y para a próxima seção
+            y = boxY + clientBoxHeight + 5;
 
-            // Seção Única para Equipamentos Atendidos, Defeitos Relatados e Serviço Realizado
-            boxY = y;
-            const equipamento = get('equipamento');
+            // Lê equipamentos da lista dinâmica
+            const equipamentosRows = [];
+            document.querySelectorAll('.equipamento-row').forEach(row => {
+                const nome = row.querySelector('.equip-nome')?.value?.trim() || '';
+                const id   = row.querySelector('.equip-id')?.value?.trim()   || '';
+                if (nome || id) equipamentosRows.push({ nome, id });
+            });
+
+            // --- Tabela de Equipamentos Atendidos ---
+            if (y > 210) { pdf.addPage(); y = 20; }
+            y += 4;
+
+            const equipColNomeX  = pageMarginX + 3;
+            const equipColNomeW  = 125;
+            const equipColIdX    = pageMarginX + 133;
+            const equipRowH      = 7;
+
+            // Título da seção
+            pdf.setFontSize(10);
+            pdf.setFont(undefined, 'bold');
+            pdf.setTextColor(sectionTitleColor[0], sectionTitleColor[1], sectionTitleColor[2]);
+            pdf.text('Equipamentos Atendidos', pageMarginX, y);
+            y += 5;
+
+            // Cabeçalho das colunas
+            pdf.setFontSize(9);
+            pdf.setTextColor(80, 80, 80);
+            pdf.text('Equipamento', equipColNomeX, y);
+            pdf.text('ID / Nº de Série', equipColIdX, y);
+            y += 2;
+            pdf.setDrawColor(180, 180, 180);
+            pdf.line(pageMarginX, y, pageMarginX + contentWidth, y);
+            y += 4;
+
+            // Linhas de dados
+            pdf.setFont(undefined, 'normal');
+            pdf.setTextColor(40, 40, 40);
+
+            if (equipamentosRows.length === 0) {
+                pdf.text('-', equipColNomeX, y);
+                y += equipRowH;
+            } else {
+                equipamentosRows.forEach((eq, i) => {
+                    if (y + equipRowH > 275) { pdf.addPage(); y = 20; }
+                    if (i % 2 === 0) {
+                        pdf.setFillColor(248, 248, 248);
+                        pdf.rect(pageMarginX, y - 3.5, contentWidth, equipRowH, 'F');
+                    }
+                    pdf.setTextColor(40, 40, 40);
+                    const nomeLinhas = pdf.splitTextToSize(eq.nome || '-', equipColNomeW);
+                    pdf.text(nomeLinhas[0], equipColNomeX, y);
+                    pdf.text(eq.id || '-', equipColIdX, y);
+                    y += equipRowH;
+                });
+            }
+
+            pdf.setDrawColor(180, 180, 180);
+            pdf.line(pageMarginX, y, pageMarginX + contentWidth, y);
+            y += 8;
+            // --- Fim da Tabela de Equipamentos ---
+
+            // --- Caixa: Defeito Relatado ---
             const defeito = get('defeito');
             const servico = get('servico');
 
-            let combinedContentHeight = 0;
-            let currentSectionContentY = boxY + 10 + boxPadding; // Posição Y inicial para o conteúdo desta seção
+            const drawTextBox = (title, text, startY) => {
+                const lines = pdf.splitTextToSize(text || '-', contentWidth - 10);
+                const contentH = (lines.length * 5) + 5;
+                const boxH = contentH + (2 * boxPadding) + 7;
+                if (startY + boxH > 275) { pdf.addPage(); startY = 20; }
+                const innerY = drawSectionBox(title, startY, boxH);
+                pdf.setFontSize(9);
+                pdf.setFont(undefined, 'normal');
+                pdf.setTextColor(valueColor[0], valueColor[1], valueColor[2]);
+                pdf.text(lines, pageMarginX + 5, innerY + 1);
+                return startY + boxH + 5;
+            };
 
-            // Calcula a altura de cada sub-seção e acumula
-            combinedContentHeight += addMultilineField('Equipamentos Atendidos', equipamento, pageMarginX + 5, currentSectionContentY, contentWidth - 10);
-            currentSectionContentY += (pdf.splitTextToSize(equipamento, contentWidth - 10).length * 5) + 5; // Atualiza o Y para o próximo item
-            pdf.line(pageMarginX + 5, currentSectionContentY - 2, pageMarginX + contentWidth - 5, currentSectionContentY - 2); // Linha divisória
-            currentSectionContentY += 5; // Espaço após a linha
-
-            let tempHeight = addMultilineField('Defeitos Relatados', defeito, pageMarginX + 5, currentSectionContentY, contentWidth - 10);
-            combinedContentHeight += tempHeight + 5; // Adiciona altura da seção de defeitos + espaço
-            currentSectionContentY += tempHeight;
-            pdf.line(pageMarginX + 5, currentSectionContentY - 2, pageMarginX + contentWidth - 5, currentSectionContentY - 2); // Linha divisória
-            currentSectionContentY += 5;
-
-            tempHeight = addMultilineField('Serviço Realizado', servico, pageMarginX + 5, currentSectionContentY, contentWidth - 10);
-            combinedContentHeight += tempHeight + 5; // Adiciona altura da seção de Serviço Realizado + espaço
-            // currentSectionContentY += tempHeight; (Não precisa atualizar, pois é o último item)
-
-            // Desenha a caixa para a seção combinada
-            y = drawSectionBox('Equipamentos, Defeitos e Serviço Realizado', boxY, combinedContentHeight + (2 * boxPadding) + 7); // +7 para o título e linha
-            // Reposiciona o Y para os textos dentro da caixa após desenhar ela
-            currentSectionContentY = boxY + 10 + boxPadding;
-
-            // Redesenha os textos DENTRO da caixa, agora que a caixa está desenhada
-            addMultilineField('Equipamentos Atendidos', equipamento, pageMarginX + 5, currentSectionContentY, contentWidth - 10);
-            currentSectionContentY += (pdf.splitTextToSize(equipamento, contentWidth - 10).length * 5) + 5; // Atualiza o Y para o próximo item
-            pdf.line(pageMarginX + 5, currentSectionContentY - 2, pageMarginX + contentWidth - 5, currentSectionContentY - 2); // Linha divisória
-            currentSectionContentY += 5; // Espaço após a linha
-
-            addMultilineField('Defeitos Relatados', defeito, pageMarginX + 5, currentSectionContentY, contentWidth - 10);
-            currentSectionContentY += (pdf.splitTextToSize(defeito, contentWidth - 10).length * 5) + 5;
-            pdf.line(pageMarginX + 5, currentSectionContentY - 2, pageMarginX + contentWidth - 5, currentSectionContentY - 2); // Linha divisória
-            currentSectionContentY += 5;
-
-            addMultilineField('Serviço Realizado', servico, pageMarginX + 5, currentSectionContentY, contentWidth - 10);
-
-            y = boxY + combinedContentHeight + (2 * boxPadding) + 7 + 5; // Atualiza y para a próxima seção
+            y = drawTextBox('Defeito Relatado', defeito, y);
+            y = drawTextBox('Serviço Realizado', servico, y);
             // --- Fim das Seções de Dados com Caixas ---
 
 
@@ -429,50 +474,85 @@ window.addEventListener('DOMContentLoaded', () => {
             pdf.setDrawColor(180, 180, 180);
             pdf.roundedRect(tecnicoSigX, y + signaturePadding, signatureBoxWidth, signatureBoxHeight, 2, 2, 'S');
             if (assinaturaTecnicoImg) {
-                pdf.addImage(assinaturaTecnicoImg, 'PNG', tecnicoSigX + 2, y + signaturePadding + 2, signatureBoxWidth - 4, signatureBoxHeight - 4);
+                pdf.addImage(assinaturaTecnicoImg, 'JPEG', tecnicoSigX + 2, y + signaturePadding + 2, signatureBoxWidth - 4, signatureBoxHeight - 4);
             }
 
             // Caixa do Cliente
             const clienteSigX = pageMarginX + (contentWidth / 2) + 5;
             pdf.roundedRect(clienteSigX, y + signaturePadding, signatureBoxWidth, signatureBoxHeight, 2, 2, 'S');
             if (assinaturaClienteImg) {
-                pdf.addImage(assinaturaClienteImg, 'PNG', clienteSigX + 2, y + signaturePadding + 2, signatureBoxWidth - 4, signatureBoxHeight - 4);
+                pdf.addImage(assinaturaClienteImg, 'JPEG', clienteSigX + 2, y + signaturePadding + 2, signatureBoxWidth - 4, signatureBoxHeight - 4);
             }
 
-            y += signatureBoxHeight + signaturePadding + 5; // Move Y para baixo após as assinaturas
+            // Nome do assinante cliente
+            const nomeAssinante = get('nomeAssinanteCliente');
+            if (nomeAssinante) {
+                pdf.setFontSize(9);
+                pdf.setFont(undefined, 'normal');
+                pdf.setTextColor(80, 80, 80);
+                pdf.text(nomeAssinante, clienteSigX + signatureBoxWidth / 2, y + signaturePadding + signatureBoxHeight + 5, { align: 'center' });
+            }
+
+            y += signatureBoxHeight + signaturePadding + 10;
 
             // --- Fotos do Serviço ---
+            // Antes sempre na coluna esquerda, Depois na coluna direita
             const fotos = window.imagensServico || [];
             if (fotos.length > 0) {
                 pdf.addPage();
                 let fy = 15;
+
+                // Título da página
                 pdf.setFontSize(12);
                 pdf.setFont(undefined, 'bold');
                 pdf.setTextColor(sectionTitleColor[0], sectionTitleColor[1], sectionTitleColor[2]);
                 pdf.text('Fotos do Serviço', 105, fy, { align: 'center' });
-                pdf.setFont(undefined, 'normal');
-                fy += 10;
+                fy += 8;
 
-                const fotoGap = 5;
-                const fotoCols = 2;
-                const fotoWidth = (contentWidth - fotoGap) / fotoCols;
-                const fotoHeight = fotoWidth * 0.75;
+                const fotoGap    = 6;
+                const fotoWidth  = (contentWidth - fotoGap) / 2;
+                const fotoHeight = fotoWidth * 0.72;
+                const labelH     = 8;
+                const rowH       = fotoHeight + labelH + fotoGap;
 
-                for (let i = 0; i < fotos.length; i++) {
-                    const col = i % fotoCols;
-                    if (col === 0 && i > 0) fy += fotoHeight + fotoGap;
-                    if (fy + fotoHeight > 282) {
-                        pdf.addPage();
-                        fy = 15;
+                const fxAntes  = pageMarginX;
+                const fxDepois = pageMarginX + fotoWidth + fotoGap;
+
+                // Cabeçalhos das colunas (fixos no início de cada página)
+                const drawColHeaders = (startY) => {
+                    pdf.setFontSize(10);
+                    pdf.setFont(undefined, 'bold');
+                    pdf.setTextColor(30, 100, 200);
+                    pdf.text('ANTES', fxAntes + fotoWidth / 2, startY, { align: 'center' });
+                    pdf.setTextColor(200, 90, 20);
+                    pdf.text('DEPOIS', fxDepois + fotoWidth / 2, startY, { align: 'center' });
+                    pdf.setFont(undefined, 'normal');
+                    return startY + 7;
+                };
+
+                fy = drawColHeaders(fy);
+
+                const fotosAntes  = fotos.filter(f => (f.tipo || 'antes') === 'antes');
+                const fotosDepois = fotos.filter(f => f.tipo === 'depois');
+                const totalRows   = Math.max(fotosAntes.length, fotosDepois.length);
+
+                const borderAntes  = [30, 100, 200];  // azul
+                const borderDepois = [200, 90, 20];   // laranja
+
+                const drawFotoNaColuna = async (foto, fx, fy, tipo) => {
+                    const [r, g, b] = tipo === 'depois' ? borderDepois : borderAntes;
+                    if (!foto) {
+                        pdf.setFillColor(250, 250, 250);
+                        pdf.setDrawColor(r, g, b);
+                        pdf.setLineWidth(0.6);
+                        pdf.rect(fx, fy, fotoWidth, fotoHeight, 'FD');
+                        pdf.setLineWidth(0.2);
+                        return;
                     }
-                    const fx = pageMarginX + col * (fotoWidth + fotoGap);
                     try {
-                        const dataUrl = fotos[i].dataUrl;
-
-                        // Carrega a imagem para obter as dimensões reais e manter proporção
                         const tmpImg = new Image();
-                        await new Promise(res => { tmpImg.onload = res; tmpImg.src = dataUrl; });
-                        const ratio = tmpImg.naturalWidth / tmpImg.naturalHeight;
+                        await new Promise(res => { tmpImg.onload = res; tmpImg.src = foto.dataUrl; });
+                        const ratio    = tmpImg.naturalWidth / tmpImg.naturalHeight;
                         const boxRatio = fotoWidth / fotoHeight;
                         let iw, ih, ix, iy;
                         if (ratio >= boxRatio) {
@@ -482,15 +562,29 @@ window.addEventListener('DOMContentLoaded', () => {
                             ih = fotoHeight; iw = ih * ratio;
                             ix = fx + (fotoWidth - iw) / 2; iy = fy;
                         }
-
                         pdf.setFillColor(245, 245, 245);
                         pdf.rect(fx, fy, fotoWidth, fotoHeight, 'F');
-                        pdf.addImage(dataUrl, 'JPEG', ix, iy, iw, ih);
-                        pdf.setDrawColor(200, 200, 200);
+                        pdf.addImage(foto.dataUrl, 'JPEG', ix, iy, iw, ih);
+                        pdf.setDrawColor(r, g, b);
+                        pdf.setLineWidth(0.6);
                         pdf.rect(fx, fy, fotoWidth, fotoHeight, 'S');
+                        pdf.setLineWidth(0.2);
                     } catch (e) {
                         console.warn('Erro ao adicionar foto:', e);
                     }
+                };
+
+                for (let i = 0; i < totalRows; i++) {
+                    if (fy + fotoHeight + labelH > 282) {
+                        pdf.addPage();
+                        fy = 15;
+                        fy = drawColHeaders(fy);
+                    }
+
+                    await drawFotoNaColuna(fotosAntes[i],  fxAntes,  fy, 'antes');
+                    await drawFotoNaColuna(fotosDepois[i], fxDepois, fy, 'depois');
+
+                    fy += fotoHeight + fotoGap;
                 }
             }
 
@@ -502,11 +596,7 @@ window.addEventListener('DOMContentLoaded', () => {
             pdf.save('ordem-de-servico.pdf');
 
         } catch (err) {
-            if (typeof showToast === 'function') {
-                showToast('Erro ao gerar PDF!', false);
-            } else {
-                alert('Erro ao gerar PDF!');
-            }
+            showToast('Erro ao gerar PDF!', false);
             console.error(err);
         } finally {
             btn.disabled = false;

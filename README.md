@@ -1,153 +1,124 @@
 # Relatório de Serviço — Refrigeração Fidelis
 
-Sistema web completo para geração, envio e impressão de ordens de serviço, com layout moderno, integração com Google Sheets e geração de PDF fiel ao frontend.
+Sistema web para geração de ordens de serviço em PDF, com layout moderno e responsivo.
 
 ---
 
 ## Funcionalidades
 
-- **Formulário de Ordem de Serviço Completo**  
-  - Campos para dados do cliente, técnico, serviço, materiais, valores, garantia e assinaturas.
-  - **Campos obrigatórios:** Data do Serviço, Status, Técnico Responsável, Nome Fantasia (Cliente), CNPJ (Cliente) e assinaturas.
-  - Máscara automática para CNPJ e valores em reais.
+- **Formulário de Ordem de Serviço Completo**
+  - Campos para dados do cliente, técnico, equipamentos, defeito, serviço, materiais, valores, garantia e assinaturas.
+  - Campos obrigatórios: Data do Serviço, Status, Técnico Responsável e Nome do Cliente.
+  - Toggle **Pessoa Física / Jurídica** — exibe CNPJ (PJ) ou CPF (PF) com máscara automática.
   - Exibição condicional do campo "Outro Técnico".
-  - Opção de exibir ou ocultar valores de material/serviço no PDF.
+  - Opção de exibir ou ocultar valores monetários no PDF.
 
-- **Sistema de Materiais Dinâmicos**  
-  - Adição/remoção dinâmica de materiais com campos para descrição, quantidade, valor unitário.
-  - Cálculo automático de subtotais e valor total dos materiais.
-  - Campo para valor da mão de obra com cálculo automático do valor total do serviço.
-  - Tabela organizada no PDF com cabeçalho repetido em novas páginas.
+- **Equipamentos Dinâmicos**
+  - Adição/remoção de equipamentos com campos para nome e ID/número de série.
+  - Aparece no PDF como lista organizada dentro da seção de serviço.
 
-- **Assinatura Digital**  
+- **Materiais e Peças Dinâmicos**
+  - Adição/remoção de itens com descrição, quantidade e valor unitário.
+  - Subtotais e total calculados automaticamente.
+  - Campo para mão de obra com cálculo do valor total do serviço.
+
+- **Fotos do Serviço**
+  - Upload de múltiplas fotos com compressão automática.
+  - Cada foto recebe um label **Antes** ou **Depois** que aparece no PDF.
+  - Fotos exibidas em grade no PDF com proporção preservada.
+
+- **Assinatura Digital**
   - Captura de assinatura do técnico e do cliente via canvas.
-  - Botão para limpar assinatura individual.
-  - Assinaturas incluídas no PDF gerado.
+  - Campo de nome legível do assinante (cliente), útil quando a assinatura é rubrica.
 
-- **Controles de Formulário**  
-  - Botão "Gerar PDF" para download do documento.
-  - Botão "Salvar" para envio ao Google Sheets (formulário não é limpo automaticamente).
-  - Botão "Limpar Formulário" com modal de confirmação moderno.
-  - Layout responsivo dos botões (lado a lado no desktop, empilhados no mobile).
+- **Geração de PDF**
+  - PDF gerado campo a campo (sem print da tela) usando [jsPDF](https://github.com/parallax/jsPDF).
+  - Cabeçalho com logo e dados da empresa.
+  - Seção de equipamentos, defeito e serviço em bloco organizado.
+  - Tabela de materiais com cabeçalho repetido em novas páginas.
+  - Assinaturas e nome do assinante incluídos.
+  - Fotos em página dedicada com label Antes/Depois.
 
-- **Envio para Google Sheets**  
-  - Envio dos dados do formulário diretamente para uma planilha via Google Apps Script.
-  - Consolidação dos materiais em uma única célula com quebras de linha.
-  - Feedback visual (toast) de sucesso ou erro no envio.
-  - Mapeamento correto de todos os campos incluindo valores calculados.
-
-- **Geração de PDF Profissional**  
-  - PDF gerado campo a campo, com layout fiel ao frontend.
-  - Cabeçalho com logo, dados da empresa e divisórias.
-  - Tabela de materiais com quebras de linha automáticas para descrições longas.
-  - Inclusão das assinaturas no PDF.
-  - Respeita as opções de exibição dos valores.
-  - Cabeçalho da tabela repetido em novas páginas.
-
-- **Ferramentas de Desenvolvimento**  
-  - Script de preenchimento automático para testes (`js/preencher-teste.js`).
-  - Botão flutuante para preencher o formulário com dados de exemplo.
-  - Cálculos automáticos disparados ao preencher dados de teste.
-
-- **Visual Moderno e Responsivo**  
-  - Interface responsiva e bonita com Tailwind CSS.
-  - Layout limpo, campos bem espaçados e feedback visual.
-  - Modal de confirmação moderno para limpeza do formulário.
-  - Cores consistentes: verde para salvar, vermelho para limpar.
+- **Modo de Teste**
+  - Variável de ambiente em `js/config.js` controla o ambiente (`test` / `prod`).
+  - Em `test`, exibe um botão flutuante amarelo que preenche o formulário com dados fictícios.
 
 ---
 
 ## Estrutura dos Arquivos
 
 ```
-index.html           # Página principal com o formulário completo
-dist/tailwind.css    # Estilos gerados pelo Tailwind
+index.html              # Página principal com o formulário completo
 assets/
-  ├─ icon.png        # Ícone da empresa
-  └─ logo.png        # Logo da empresa
+  ├─ icon.png           # Ícone da empresa
+  └─ favicon.ico        # Favicon
 js/
-  ├─ main.js         # Lógica do formulário, máscaras, campos dinâmicos e cálculos
-  ├─ assinatura.js   # Captura e limpeza das assinaturas
-  ├─ gerarPDF.js     # Geração do PDF fiel ao frontend
-  ├─ toast-form.js   # Feedback visual (toast) no envio do formulário
-  ├─ utils.js        # Funções utilitárias (formatação de data, CNPJ, valores)
-  └─ preencher-teste.js # Script para preenchimento automático de testes
-tailwind.config.js   # Configuração do Tailwind CSS
-package.json         # Dependências do projeto
-README-appscript.md  # Documentação do Google Apps Script para integração com Sheets
+  ├─ config.js          # Variável de ambiente (APP_ENV: 'test' | 'prod')
+  ├─ main.js            # Lógica do formulário, máscaras, campos dinâmicos e cálculos
+  ├─ assinatura.js      # Captura e limpeza das assinaturas via canvas
+  ├─ gerarPDF.js        # Geração do PDF campo a campo
+  ├─ preencher-teste.js # Dados fictícios para teste (ativo somente em APP_ENV=test)
+  └─ utils.js           # Funções utilitárias (data, CNPJ, CPF, valores)
 ```
 
 ---
 
 ## Como Usar
 
-1. **Instale as dependências do Tailwind (se for customizar o CSS):**
-   ```bash
-   npm install
-   npm run build
-   ```
+1. **Abra o `index.html` em um servidor local** (ex: Live Server no VS Code ou `npx serve .`).
 
-2. **Abra o `index.html` em seu navegador.**
+   > Não abra como `file://` — os módulos ES (`type="module"`) exigem servidor HTTP.
 
-3. **Preencha o formulário:**
-   - Os campos obrigatórios estão marcados com *.
-   - Para outro técnico, selecione "Outro" e preencha o nome.
-   - Adicione materiais clicando em "Adicionar Material" e preencha os campos.
-   - Os cálculos são feitos automaticamente.
-   - Assine nos campos de assinatura.
+2. **Preencha o formulário:**
+   - Selecione o tipo de cliente (PJ ou PF) antes de preencher os dados do cliente.
+   - Adicione equipamentos com nome e ID clicando em **Adicionar Equipamento**.
+   - Adicione materiais clicando em **Adicionar Material ou Peça**.
+   - Assine nos campos de assinatura e, se necessário, preencha o nome do assinante.
+   - Adicione fotos e marque cada uma como **Antes** ou **Depois**.
 
-4. **Gere o PDF:**
-   - Clique em **Gerar PDF** para baixar um PDF fiel ao formulário preenchido, incluindo as assinaturas.
+3. **Gere o PDF:**
+   - Clique em **Gerar PDF** para baixar a ordem de serviço em PDF.
 
-5. **Envie a ordem:**
-   - Clique em **Salvar** para enviar para o Google Sheets.
-   - Um toast de sucesso/erro será exibido.
-   - O formulário não será limpo automaticamente.
+4. **Limpe o formulário:**
+   - Clique em **Limpar Formulário** e confirme no modal.
 
-6. **Limpe o formulário (opcional):**
-   - Clique em **Limpar Formulário** para limpar todos os campos.
-   - Confirme a ação no modal que aparecerá.
+5. **Testes rápidos:**
+   - Com `APP_ENV = 'test'` em `js/config.js`, um botão amarelo **Preencher Teste** aparece no canto inferior esquerdo.
+   - Clique nele para popular o formulário com dados fictícios e testar a geração de PDF.
 
-7. **Para testes rápidos:**
-   - Use o botão flutuante "Preencher Teste" para popular o formulário com dados de exemplo.
+---
+
+## Configuração de Ambiente
+
+Edite `js/config.js`:
+
+```javascript
+// 'test' → ativa botão de preenchimento fictício
+// 'prod' → desativa todos os recursos de teste
+window.APP_ENV = 'test';
+```
+
+Antes de colocar em produção, altere para `'prod'`.
 
 ---
 
 ## Observações Técnicas
 
-- **Google Sheets:**  
-  O envio é feito via POST para um Google Apps Script configurado como endpoint web. Os nomes dos campos do formulário devem ser idênticos aos nomes das colunas da planilha. Os materiais são consolidados em uma única célula com quebras de linha.
-
-- **PDF:**  
-  O PDF é gerado usando [jsPDF](https://github.com/parallax/jsPDF). Não é feito print da tela, mas sim montagem manual campo a campo, garantindo fidelidade e responsividade. A tabela de materiais suporta quebras de linha automáticas e cabeçalho repetido.
-
-- **Cálculos:**  
-  Todos os cálculos (subtotais, totais) são feitos automaticamente com arredondamento para evitar imprecisões de ponto flutuante.
-
-- **Utilitários:**  
-  Funções de formatação de data, CNPJ e valores estão em `js/utils.js` e são usadas em todo o projeto.
+- **PDF:** gerado com [jsPDF](https://github.com/parallax/jsPDF) — montagem manual campo a campo, sem captura de tela.
+- **Cálculos:** subtotais e totais com arredondamento via `Math.round` para evitar imprecisões de ponto flutuante.
+- **Fotos:** comprimidas para no máximo 1400 px e qualidade JPEG 80% antes de serem armazenadas em memória.
+- **Módulos:** `main.js` e `gerarPDF.js` usam `type="module"` — requerem servidor HTTP.
 
 ---
 
 ## Customização
 
-- **Paleta de cores:**  
-  Editável em `tailwind.config.js`.
-- **Campos do formulário:**  
-  Editáveis em `index.html`.
-- **Funções utilitárias:**  
-  Adicione novas funções em `js/utils.js` conforme necessário.
-- **Dados de teste:**  
-  Modifique `js/preencher-teste.js` para alterar os dados de exemplo.
+- **Dados de teste:** edite o objeto `DADOS` em `js/preencher-teste.js`.
+- **Técnicos disponíveis:** edite as `<option>` do `<select id="tecnico">` em `index.html`.
+- **Dados da empresa (cabeçalho do PDF):** edite diretamente em `js/gerarPDF.js` na seção `Cabeçalho`.
 
 ---
 
 ## Licença
 
-Projeto de uso interno para Refrigeração Fidelis.  
-
----
-
-## Documentação da Integração com Google Sheets
-
-Consulte o arquivo [`README-appscript.md`](./README-appscript.md) para ver o passo a passo de configuração do Google Apps Script e integração com o formulário HTML.  
+Projeto de uso interno para Refrigeração Fidelis.

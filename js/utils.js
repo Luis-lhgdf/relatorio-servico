@@ -33,6 +33,23 @@ export function formatarCNPJ(cnpj) {
 }
 
 /**
+ * Formata um CPF para o padrão XXX.XXX.XXX-XX
+ * @param {string} cpf
+ * @returns {string}
+ */
+export function formatarCPF(cpf) {
+  cpf = cpf.replace(/\D/g, '').substring(0, 11);
+  if (cpf.length > 9) {
+    cpf = cpf.replace(/^(\d{3})(\d{3})(\d{3})(\d{2}).*/, '$1.$2.$3-$4');
+  } else if (cpf.length > 6) {
+    cpf = cpf.replace(/^(\d{3})(\d{3})(\d{3}).*/, '$1.$2.$3');
+  } else if (cpf.length > 3) {
+    cpf = cpf.replace(/^(\d{3})(\d{3}).*/, '$1.$2');
+  }
+  return cpf;
+}
+
+/**
  * Formata um valor para moeda brasileira (R$)
  * @param {string} valor
  * @returns {string}
