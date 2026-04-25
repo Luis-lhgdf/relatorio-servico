@@ -76,15 +76,26 @@ function desenhar(e, canvas, ctx) {
 
 // Função para parar o desenho
 function pararDesenho() {
+    if (!isDrawing) return;
     isDrawing = false;
+    if (typeof window.salvarDados === 'function') window.salvarDados();
 }
 
 // Função para limpar a assinatura (tornada global)
 window.limparAssinatura = function(tipo) {
     const canvas = tipo === 'tecnico' ? canvasTecnico : canvasCliente;
     const ctx = tipo === 'tecnico' ? ctxTecnico : ctxCliente;
-    
+
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+}
+
+window.restaurarAssinatura = function(tipo, dataUrl) {
+    const canvas = tipo === 'tecnico' ? canvasTecnico : canvasCliente;
+    const ctx = tipo === 'tecnico' ? ctxTecnico : ctxCliente;
+    if (!canvas || !ctx || !dataUrl) return;
+    const img = new Image();
+    img.onload = function() { ctx.drawImage(img, 0, 0, canvas.width, canvas.height); };
+    img.src = dataUrl;
 }
 
 // Função para obter a assinatura como base64

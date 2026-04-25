@@ -35,7 +35,7 @@
   <script src="js/config.js"></script>
   <script src="js/toast.js"></script>
 </head>
-<body class="bg-gradient-to-br from-dark-50 to-dark-100 min-h-screen text-dark-900 p-4">
+<body class="bg-gradient-to-br from-dark-50 to-dark-100 min-h-screen text-dark-900 p-4 overflow-x-hidden">
   <!-- Cabeçalho Fixo -->
   <div class="fixed top-0 left-0 right-0 bg-dark-900 p-2 z-50 shadow-lg">
     <div class="max-w-4xl mx-auto flex items-center justify-between">
@@ -78,11 +78,17 @@
       <div class="grid grid-cols-1 sm:grid-cols-2 gap-4 sm:gap-6">
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
           <label for="dataServico" class="block text-sm font-medium text-dark-700">Data do Serviço <span class="text-red-500">*</span></label>
-          <input type="date" id="dataServico" name="Data do Serviço" required class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
+          <input type="date" id="dataServico" name="Data do Serviço" required class="mt-1 w-full min-w-0 border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
         </div>
         <div class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
           <label for="status" class="block text-sm font-medium text-dark-700">Status <span class="text-red-500">*</span></label>
-          <input type="text" id="status" name="Status" required class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
+          <select id="status" name="Status" required class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all">
+            <option value="">Selecione o status</option>
+            <option value="Orçamento">Orçamento</option>
+            <option value="Finalizado">Finalizado</option>
+            <option value="Outros">Outros</option>
+          </select>
+          <input type="text" id="statusOutro" name="StatusOutro" placeholder="Descreva o status" class="mt-2 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all hidden" />
         </div>
       </div>
 
@@ -125,6 +131,11 @@
           <label for="cpfCliente" class="block text-sm font-medium text-dark-700">CPF (Cliente)</label>
           <input type="text" id="cpfCliente" name="CPF do Cliente" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" />
         </div>
+      </div>
+
+      <div id="campoNomeSolicitante" class="bg-dark-50 p-3 sm:p-4 rounded-lg border border-dark-200">
+        <label for="nomeSolicitante" class="block text-sm font-medium text-dark-700">Nome do Solicitante</label>
+        <input type="text" id="nomeSolicitante" name="Nome do Solicitante" class="mt-1 w-full border-dark-200 rounded-lg px-3 sm:px-4 py-2 text-sm sm:text-base focus:ring-2 focus:ring-dark-400 focus:border-dark-400 transition-all" placeholder="Nome do responsável/solicitante" />
       </div>
 
       <!-- Equipamentos Dinâmicos -->
@@ -288,12 +299,13 @@
   <!-- Gerenciamento de Fotos -->
   <script>
     window.imagensServico = [];
-    var _fotoIdCounter = 0;
+    window._fotoIdCounter = 0;
 
     function removerFoto(id) {
       window.imagensServico = window.imagensServico.filter(function(img) { return img.id !== id; });
       var el = document.querySelector('[data-img-id="' + id + '"]');
       if (el) el.remove();
+      if (typeof window.salvarDados === 'function') window.salvarDados();
     }
 
     function setFotoTipo(id, tipo) {
@@ -312,11 +324,33 @@
         btnAntes.className = 'foto-btn-antes flex-1 text-xs py-1 rounded font-semibold bg-gray-200 text-gray-600 transition-colors';
         btnDepois.className = 'foto-btn-depois flex-1 text-xs py-1 rounded font-semibold bg-orange-500 text-white transition-colors';
       }
+      if (typeof window.salvarDados === 'function') window.salvarDados();
     }
+
+    window.criarPreviewFoto = function(id, dataUrl, tipo) {
+      var previewFotos = document.getElementById('previewFotos');
+      if (!previewFotos) return;
+      var div = document.createElement('div');
+      div.className = 'relative overflow-hidden rounded-lg border border-dark-200 bg-gray-100';
+      div.dataset.imgId = id;
+      div.innerHTML =
+        '<img src="' + dataUrl + '" class="w-full h-24 object-cover" />' +
+        '<button type="button" onclick="removerFoto(' + id + ')" title="Remover foto" ' +
+        'class="absolute top-1.5 right-1.5 bg-black/50 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center transition-colors duration-150 shadow">' +
+        '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>' +
+        '</button>' +
+        '<div class="flex gap-1 p-1.5">' +
+        '<button type="button" onclick="setFotoTipo(' + id + ', \'antes\')" ' +
+        'class="foto-btn-antes flex-1 text-xs py-1 rounded font-semibold bg-blue-500 text-white transition-colors">Antes</button>' +
+        '<button type="button" onclick="setFotoTipo(' + id + ', \'depois\')" ' +
+        'class="foto-btn-depois flex-1 text-xs py-1 rounded font-semibold bg-gray-200 text-gray-600 transition-colors">Depois</button>' +
+        '</div>';
+      previewFotos.appendChild(div);
+      if (tipo === 'depois') setFotoTipo(id, 'depois');
+    };
 
     document.addEventListener('DOMContentLoaded', function() {
       var inputFotos = document.getElementById('inputFotos');
-      var previewFotos = document.getElementById('previewFotos');
 
       function comprimirImagem(dataUrl, callback) {
         var img = new Image();
@@ -340,26 +374,11 @@
           var reader = new FileReader();
           reader.onload = function(ev) {
             comprimirImagem(ev.target.result, function(dataUrl) {
-              var id = ++_fotoIdCounter;
+              var id = ++window._fotoIdCounter;
               window.imagensServico.push({ id: id, dataUrl: dataUrl, tipo: 'antes' });
-
-              var div = document.createElement('div');
-              div.className = 'relative overflow-hidden rounded-lg border border-dark-200 bg-gray-100';
-              div.dataset.imgId = id;
-              div.innerHTML =
-                '<img src="' + dataUrl + '" class="w-full h-24 object-cover" />' +
-                '<button type="button" onclick="removerFoto(' + id + ')" title="Remover foto" ' +
-                'class="absolute top-1.5 right-1.5 bg-black/50 hover:bg-red-600 text-white rounded-full w-6 h-6 flex items-center justify-center transition-colors duration-150 shadow">' +
-                '<svg class="w-3.5 h-3.5" fill="none" stroke="currentColor" stroke-width="2.5" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" d="M6 18L18 6M6 6l12 12"/></svg>' +
-                '</button>' +
-                '<div class="flex gap-1 p-1.5">' +
-                '<button type="button" onclick="setFotoTipo(' + id + ', \'antes\')" ' +
-                'class="foto-btn-antes flex-1 text-xs py-1 rounded font-semibold bg-blue-500 text-white transition-colors">Antes</button>' +
-                '<button type="button" onclick="setFotoTipo(' + id + ', \'depois\')" ' +
-                'class="foto-btn-depois flex-1 text-xs py-1 rounded font-semibold bg-gray-200 text-gray-600 transition-colors">Depois</button>' +
-                '</div>';
-              previewFotos.appendChild(div);
-            }); // fecha comprimirImagem
+              window.criarPreviewFoto(id, dataUrl, 'antes');
+              if (typeof window.salvarDados === 'function') window.salvarDados();
+            });
           };
           reader.readAsDataURL(file);
         });

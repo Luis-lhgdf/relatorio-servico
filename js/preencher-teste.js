@@ -7,7 +7,7 @@
     // ------- dados fictícios -------
     const DADOS = {
         dataServico: new Date().toISOString().split('T')[0],
-        status: 'Concluído',
+        status: 'Finalizado',
         tecnico: 'Everaldo Fidelis',
         tipoPessoa: 'pj',                         // 'pj' ou 'pf'
         nomeFantasia: 'Supermercado Exemplo Ltda.',
@@ -47,7 +47,11 @@
     window.preencherDadosTeste = function () {
         // Data e status
         setVal('dataServico', DADOS.dataServico);
-        setVal('status', DADOS.status);
+        const statusEl = document.getElementById('status');
+        if (statusEl) {
+            statusEl.value = DADOS.status;
+            statusEl.dispatchEvent(new Event('change', { bubbles: true }));
+        }
 
         // Técnico
         const tecnicoSelect = document.getElementById('tecnico');
