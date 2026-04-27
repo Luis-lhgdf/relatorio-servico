@@ -261,7 +261,7 @@ window.addEventListener('DOMContentLoaded', () => {
 
                 const drawSubSection = (label, lines, drawSep) => {
                     pdf.setFontSize(9);
-                    pdf.setFont(undefined, 'bold');
+                    pdf.setFont(undefined, 'normal');
                     pdf.setTextColor(labelColor[0], labelColor[1], labelColor[2]);
                     pdf.text(label, pageMarginX + 5, iy);
                     pdf.setTextColor(valueColor[0], valueColor[1], valueColor[2]);
